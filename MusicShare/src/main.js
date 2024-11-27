@@ -1,14 +1,15 @@
-import './assets/main.css'
+import { createApp } from 'vue';
+import App from './App.vue';
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+import router from './router/index';  // 引入路由配置
 
-import App from './App.vue'
-import router from './router'
+import "@/assets/text/text.css"; // 引入你的 CSS 文件
 
-const app = createApp(App)
+const app = createApp(App);
+// 使用 Vue Router
+app.use(router);
 
-app.use(createPinia())
-app.use(router)
+// 挂载到 DOM
+app.mount('#app');
 
-app.mount('#app')
+
