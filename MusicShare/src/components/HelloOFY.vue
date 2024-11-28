@@ -5,7 +5,6 @@
        <!-- 使用 router-link 跳转 -->
       <router-link to="/login">
         <a-button class="custom-button">GetStart</a-button>
-        <!-- <el-button class="custom-button" >GetStart <el-icon><TopRight /></el-icon></el-button> -->
       </router-link>
     
   </div>
@@ -33,16 +32,18 @@ h1{
     
 }
 
+
 .custom-button {
   background-color: rgb(249, 205, 173); /* 默认背景颜色 */
   color: white;
   border-color: rgb(255,255,255); /* 默认边框颜色 */
   transition: background-color 0.3s, border-color 0.3s; /* 添加平滑过渡效果 */
-  font-size: 40px; /* 设置字体大小 */
-   padding: 30px 100px; /* 调整按钮的内边距来放大按钮 */
+  font-size: 60px; /* 设置字体大小 */
+ width: 300px; /* 设置固定宽度 */
+  height: 100px; /* 设置固定高度 */
    transform: translateY(200px); 
     border-radius: 40px; /* 设置圆角，20px为圆角的半径，可以根据需要调整 */
- 
+
 }
 
 /* 鼠标悬停时的背景颜色 */
@@ -50,6 +51,7 @@ h1{
   background-color: rgb(254, 67, 101);
   border-color: rgb(254, 67, 101); /* 悬停时改变边框颜色 */
 }
+
 h3 {
   margin: 40px 0 0;
 }
@@ -62,6 +64,6 @@ li {
   margin: 0 10px;
 }
 a {
-  color: #42b983;
+  color: rgb(254, 67, 101);
 }
 </style>
