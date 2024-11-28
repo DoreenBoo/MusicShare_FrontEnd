@@ -4,7 +4,8 @@
     <!-- 自定义按钮颜色 -->
        <!-- 使用 router-link 跳转 -->
       <router-link to="/login">
-        <el-button class="custom-button" >GetStart <el-icon><TopRight /></el-icon></el-button>
+        <a-button class="custom-button">GetStart</a-button>
+        <!-- <el-button class="custom-button" >GetStart <el-icon><TopRight /></el-icon></el-button> -->
       </router-link>
     
   </div>
@@ -49,10 +50,6 @@ h1{
   background-color: rgb(254, 67, 101);
   border-color: rgb(254, 67, 101); /* 悬停时改变边框颜色 */
 }
-
-
-
-
 h3 {
   margin: 40px 0 0;
 }
