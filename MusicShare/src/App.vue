@@ -2,10 +2,8 @@
   <!-- 图标位于页面右下角 -->
   <img alt="Vue logo" style="width: 20px; position: fixed; bottom: 20px; right: 20px;" src="./assets/images/icon.png">
   <!-- Vue Router 显示匹配到的组件 -->
-  <div id="app">
       <router-view></router-view> 
-    
-  </div>
+ 
 </template>
 
 <script>
@@ -21,16 +19,17 @@ body {
   background-size: 400px;
   background-repeat: no-repeat; /* 不重复 */
   background-color: rgb(252, 157, 154); /* 替换成你想要的颜色 */
+   margin: 0; /* 去除默认边距 */
 }
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+    display: flex;
+  justify-content: center;
   align-items: center;
-  /* text-align: center; */
-  /* color: #2c3e50; */
-
+  height: 100vh;
 }
 
 </style>

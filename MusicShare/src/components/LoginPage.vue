@@ -22,14 +22,7 @@ export default {
 </script>
 
 <style>
-/* 确保页面高度充满屏幕 */
-html, body {
-  height: 100%;
-  margin: 0;
-  display: flex;
-  justify-content: center; /* 水平居中 */
-  align-items: center;    /* 垂直居中 */
-}
+
 
 /* 登录框样式 */
 .login-wrapper {
