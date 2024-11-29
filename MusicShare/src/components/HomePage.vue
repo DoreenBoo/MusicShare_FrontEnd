@@ -1,5 +1,5 @@
 <template>
-  <a-layout class="layout" style="min-height: 100vh; width: 100%; margin: 0;">
+  <a-layout class="layout" style="min-height: 100vh; width: 100%; margin: 0;background-color: rgb(252,157,154)">
     <!-- Header -->
     <a-layout-header style="padding: 0; height: 64px;">
       <div class="logo" />
@@ -9,7 +9,7 @@
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
       >
-        <a-menu-item key="1">nav 1</a-menu-item>
+        <a-menu-item key="1">Home</a-menu-item>
         <a-menu-item key="2">nav 2</a-menu-item>
         <a-menu-item key="3">nav 3</a-menu-item>
       </a-menu>
@@ -71,7 +71,7 @@ const cards = [
 ];
 </script>
 
-<style scoped>
+<style>
 /* Ensure the layout takes up the full height and width */
 body, html {
   margin: 0;
@@ -95,13 +95,13 @@ body, html {
 
 .layout-header {
   padding: 0;
-  background-color: #001529;
+  background-color:rgb(254, 67, 101)!important;
 }
 
 .layout-footer {
   padding: 0 24px;
   text-align: center;
-  background-color: #001529;
+  background-color: rgb(254, 67, 101)!important;
   color: #fff;
 }
 
