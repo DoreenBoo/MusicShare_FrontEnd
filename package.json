@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"ant-design-vue": "4.x"
+		"ant-design-vue": "~4.2.6"
 	},
 	"devDependencies": {
 		"unplugin-vue-components": "^0.27.4"
