@@ -1,7 +1,6 @@
 <template>
   <!-- 图标位于页面右下角 -->
   <img alt="Vue logo" style="width: 20px; position: fixed; bottom: 20px; right: 20px;" src="./assets/images/icon.png">
-  <!-- <HelloOFY title="ONLY FOR YOU "/> -->
   <!-- Vue Router 显示匹配到的组件 -->
   <div id="app">
       <router-view></router-view> 
@@ -28,8 +27,9 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  align-items: center;
+  /* text-align: center; */
+  /* color: #2c3e50; */
 
 }
 

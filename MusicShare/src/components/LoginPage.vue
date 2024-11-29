@@ -1,6 +1,5 @@
 <template>
     <!-- 登录/注册表单 -->
-
         <div class="login-wrapper">
             <div class="header">Login</div>
             <div class="form-wrapper">
@@ -10,7 +9,7 @@
             </div>
             <div class="msg">
                 Don't have account?
-                <a href="#">Sign up</a>
+                <router-link to="/register">Sign up</router-link>
             </div>
         </div>
    
@@ -22,17 +21,25 @@ export default {
 };
 </script>
 
-<style scoped>
- .login-wrapper {
-     background-color: rgb(249, 205, 173);
-     width: 358px;
-     height: 588px;
-      border-radius: 40px;
-     padding: 0 50px;
-     position: relative;
-     left: 35%;
-     top: 55%;
- }
+<style>
+/* 确保页面高度充满屏幕 */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;    /* 垂直居中 */
+}
+
+/* 登录框样式 */
+.login-wrapper {
+  background-color: rgb(249, 205, 173);
+  width: 358px;
+  height: 588px;
+  border-radius: 40px;
+  padding: 0 50px;
+}
+
 
  .header {
      font-size: 38px;
@@ -71,10 +78,5 @@ export default {
  .msg {
      text-align: center;
      line-height: 88px;
- }
-
- a {
-     text-decoration-line: none;
-     color: #abc1ee;
  }
 </style>
