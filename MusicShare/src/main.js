@@ -5,6 +5,8 @@ import "@/assets/text/text.css";
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/reset.css';
 
+
+
 const app = createApp(App);
 
 // 使用 Vue Router 和 Ant Design Vue

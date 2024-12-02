@@ -10,8 +10,38 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1">Home</a-menu-item>
-        <a-menu-item key="2">nav 2</a-menu-item>
-        <a-menu-item key="3">nav 3</a-menu-item>
+        <!-- <a-menu-item key="2">nav 2</a-menu-item>
+        <a-menu-item key="3">nav 3</a-menu-item> -->
+        <!-- 搜索框 -->
+        <a-menu-item key="4" style="margin-top: 20px;margin-bottom: -13px; ">
+          <a-input-search
+      v-model:value="value"
+      placeholder="input search text"
+      style="width: 200px"
+      @search="onSearch"
+    />
+        </a-menu-item>
+
+
+       <!-- 头像 -->
+        
+  <a-menu-item key="5" style="margin-left: auto;">
+          <a-dropdown>
+            <template #overlay>
+              <a-menu @click="onClick">
+                <a-menu-item key="11">个人中心</a-menu-item>
+                <a-menu-item key="12">消息</a-menu-item>
+                <a-menu-item key="13">我的喜欢</a-menu-item>
+              </a-menu>
+            </template>
+            <a class="ant-dropdown-link" @click.prevent>
+              <a-avatar src="..\src\assets\images\注意看，这是小帅.jpg" />
+              <DownOutlined />
+            </a>
+          </a-dropdown>
+        </a-menu-item>
+ 
+
       </a-menu>
     </a-layout-header>
 
@@ -27,7 +57,7 @@
  <div>
   
   <Carousel autoplay>
-    <div> <img src="E:\VueProject\MusicShare_FrontEnd\MusicShare\src\assets\images\image.png" alt="Logo" class="carousel-image" /></div>
+    <div><h3>1</h3></div>
     <div><h3>2</h3></div>
     <div><h3>3</h3></div>
     <div><h3>4</h3></div>
@@ -64,9 +94,29 @@
 // import { Carousel } from 'antd';
 import { Carousel } from 'ant-design-vue';
  import { ref } from 'vue';
+ import { DownOutlined } from '@ant-design/icons-vue';
 
  const selectedKeys = ref(['1']);
+// 搜索框
+const value = ref('');
+const onSearch = searchValue => {
+  console.log('use value', searchValue);
+  console.log('or use this.value', value.value);
+};
 
+
+// 头像
+const onClick = ({ key }) => {
+  console.log(`Click on item ${key}`);
+  if (key === '11') {
+    console.log('Clicked on the first menu item');
+  } else if (key === '12') {
+    console.log('Clicked on the second menu item');
+  } else if (key === '13') {
+    console.log('Clicked on the third menu item');
+  }
+};
+// 卡片
  const cards = [
    {
      title: 'Card 1',
@@ -87,7 +137,7 @@ import { Carousel } from 'ant-design-vue';
 
 </script>
 
-<style>
+<style scoped>
 /* Ensure the layout takes up the full height and width */
 body, html {
   margin: 0;
@@ -142,17 +192,15 @@ body, html {
   margin: 16px 0 16px 24px;
 }
 
-/* 1. 先确保 Carousel 容器的宽度设置 */
-.a-carousel {
-  max-width: 50%;  /* 让 Carousel 容器自适应宽度 */
-  width: 50%;      /* 确保 Carousel 占满整个容器 */
+/* 走马灯 */
+:deep(.slick-slide) {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #364d79;
+  overflow: hidden;
 }
-
-/* 2. 调整图片的大小 */
-.carousel-image {
-  width: 20%;       /* 图片宽度占满 Carousel */
-  height: auto;      /* 高度自适应，保持比例 */
-  object-fit: contain; /* 图片裁剪方式，确保图片内容完整显示 */
-
+:deep(.slick-slide h3) {
+  color: #fff;
 }
 </style>
