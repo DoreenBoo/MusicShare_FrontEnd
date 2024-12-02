@@ -4,6 +4,15 @@
   <!-- Vue Router 显示匹配到的组件 -->
       <router-view></router-view> 
  
+<!-- 修改主题变量  -->
+   <a-config-provider
+    :theme="{
+      token: {
+        colorPrimary: 'rgb(252,157,154)',
+      },
+    }"
+  >
+  </a-config-provider>
 </template>
 
 <script>
