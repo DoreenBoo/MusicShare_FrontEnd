@@ -67,16 +67,16 @@
 
       
       <!-- Cards Section -->
-      <div :style="{ background: ' rgb(249,205,173)', padding: '24px', minHeight: '280px', flex: 1, width: '100%' }">
-        <a-row gutter={16}>
-          <a-col :span="8" v-for="item in cards" :key="item.title">
-            <a-card
-              :title="item.title"
-              :extra="item.extra"
-              :hoverable="true"
-              :style="{ width: '100%' }"
-            >
-              <p>{{ item.content }}</p>
+      <div :style="{ background: 'rgb(249,205,173)', padding: '30px', minHeight: '280px', flex: 1, width: '100%' }">
+        <a-row :gutter =8>
+          <a-col :span="6" v-for="item in cards" :key="item.title">
+            <a-card hoverable style="width: 250px">
+              <template #cover>
+                <img alt="example" :src="item.image" />
+              </template>
+              <a-card-meta :title="item.title">
+                <template #description>{{ item.description }}</template>
+              </a-card-meta>
             </a-card>
           </a-col>
         </a-row>
@@ -116,24 +116,29 @@ const onClick = ({ key }) => {
     console.log('Clicked on the third menu item');
   }
 };
-// 卡片
- const cards = [
-   {
-     title: 'Card 1',
-    extra: 'More',
-    content: 'This is a description for card 1.',
+// 卡片内容
+const cards = [
+  {
+    title: '注意看，这是小帅',
+    description: 'This is a handsome girl.',
+    image: '../src/assets/images/注意看，这是小帅.jpg',
   },
-   {
-     title: 'Card 2',
-     extra: 'More',
-     content: 'This is a description for card 2.',
-   },
-   {
-     title: 'Card 3',
-     extra: 'More',
-     content: 'This is a description for card 3.',
-   },
- ];
+  {
+    title: '注意看，这是小帅',
+    description: 'This is a handsome girl.',
+    image: '../src/assets/images/注意看，这是小帅.jpg',
+  },
+  {
+    title: '注意看，这是小帅',
+    description: 'This is a handsome girl.',
+    image: '../src/assets/images/注意看，这是小帅.jpg',
+  },
+    {
+    title: '注意看，这是小帅',
+    description: 'This is a handsome girl.',
+    image: '../src/assets/images/注意看，这是小帅.jpg',
+  },
+];
 
 </script>
 
