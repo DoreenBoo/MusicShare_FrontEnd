@@ -3,6 +3,7 @@ import HomePage from '../components/HomePage.vue';
 import HelloOFY from '../components/HelloOFY.vue';
 import LoginPage from '../components/LoginPage.vue';
 import RegisterPage from '../components/RegisterPage.vue'; // 引入注册页面  
+import PersonalCenter from '@/components/PersonalCenter.vue';
 
 const routes = [
     {
@@ -30,6 +31,12 @@ const routes = [
         path: '/',
         redirect: '/login', // 默认跳转到登录页面
     },  
+
+    {
+        path: '/person',
+        name: 'PersonalCenter',
+        component: PersonalCenter,
+    },
 ];
 
 const router = createRouter({

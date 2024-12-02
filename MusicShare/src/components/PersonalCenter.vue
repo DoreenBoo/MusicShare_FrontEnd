@@ -16,5 +16,6 @@
 
 
 <script setup>
-import LayoutUI from './components/LayoutUI.vue';
+import LayoutUI from '../components/layoutUI.vue';
+
 </script>
