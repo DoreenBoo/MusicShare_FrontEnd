@@ -8,7 +8,9 @@
         mode="horizontal"
         :style="{ lineHeight: '64px' }"
       >
-        <a-menu-item key="1">Home</a-menu-item>
+        <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
+        <a-menu-item key="2">Classic</a-menu-item>
+        <a-menu-item key="3">Share</a-menu-item>
         <a-menu-item key="4" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
             v-model:value="value"
@@ -21,9 +23,10 @@
           <a-dropdown>
             <template #overlay>
               <a-menu @click="onClick">
-                <a-menu-item key="11">个人中心</a-menu-item>
+                <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
                 <a-menu-item key="12">消息</a-menu-item>
                 <a-menu-item key="13">我的喜欢</a-menu-item>
+                <a-menu-item key="13">退出登录</a-menu-item>
               </a-menu>
             </template>
             <a class="ant-dropdown-link" @click.prevent>
@@ -38,7 +41,9 @@
     <!-- Content (插入页面特有内容) -->
     <a-layout-content :style="{ padding: '0 50px', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }">
       <slot></slot>
-    </a-layout-content>
+      <router-view></router-view>
+    </a-layout-content>     
+
 
     <!-- Footer -->
     <a-layout-footer style="text-align: center; padding: 0; background-color: rgb(252,157,154)">
@@ -50,6 +55,7 @@
 <script setup>
 import { ref } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
+// import router from '@/router';
 
 
 const selectedKeys = ref(['1']);
