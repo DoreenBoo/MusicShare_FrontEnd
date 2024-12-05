@@ -9,8 +9,8 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
-        <a-menu-item key="2">Classic</a-menu-item>
-        <a-menu-item key="3"><router-link to="/index/share">Share</router-link></a-menu-item>
+        <a-menu-item key="2">CLASSIC</a-menu-item>
+        <a-menu-item key="3"><router-link to="/index/share">SHARE</router-link></a-menu-item>
         <a-menu-item key="4" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
             v-model:value="value"

@@ -19,43 +19,43 @@
     }"
   >
     <!-- 用户自定义标题 -->
-    <!-- <div style="margin-bottom: 20px;">
-      <h3>分享您的音乐</h3>
-    </div> -->
+    <div style="margin-bottom: 20px;">
+      <h3>Share Your Music!</h3>
+    </div>
 
     <!-- 音乐上传表单 -->
     <form @submit.prevent="submitForm">
       <!-- 标题输入框 -->
       <div style="margin-bottom: 15px;">
-        <label for="title" style="font-size: 16px;">标题</label>
+        <label for="title" style="font-size: 16px;">Title</label>
         <input
           id="title"
           v-model="musicTitle"
           type="text"
           placeholder="输入标题"
-          style="padding: 10px; width: 100%; border-radius: 5px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius:40px; margin-top: 5px;"
         />
       </div>
 
       <!-- 文案输入框 -->
       <div style="margin-bottom: 15px;">
-        <label for="description" style="font-size: 16px;">文案</label>
+        <label for="description" style="font-size: 16px;">Text</label>
         <textarea
           id="description"
           v-model="musicDescription"
           placeholder="输入音乐文案"
           rows="4"
-          style="padding: 10px; width: 100%; border-radius: 5px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px;"
         ></textarea>
       </div>
 
       <!-- 音乐类型选择 -->
       <div style="margin-bottom: 15px;">
-        <label for="musicType" style="font-size: 16px;">音乐类型</label>
+        <label for="musicType" style="font-size: 16px;">MusicType</label>
         <select
           id="musicType"
           v-model="musicType"
-          style="padding: 10px; width: 100%; border-radius: 5px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px;"
         >
           <option value="pop">流行</option>
           <option value="rock">摇滚</option>
@@ -65,18 +65,18 @@
         </select>
       </div>
       <div style="margin-top: 30px; width: '100%';">
-      <h3>分享链接（选填）</h3>
+      <h3>分享链接</h3>
       <input
         v-model="shareLink"
         type="text"
-        placeholder="可以选填分享链接"
-        style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;"
+        placeholder="分享链接"
+        style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 40px;"
       />
       <button
         @click="copyLink"
-        style="margin-top: 10px; padding: 10px; background-color: #2196F3; color: white; border: none; border-radius: 5px;"
+        style="margin-top: 10px; padding: 10px; background-color: #2196F3; color: white; border: none; border-radius: 40px;"
       >
-        复制链接
+        Copy
       </button>
     </div>
 
@@ -96,9 +96,9 @@
       <div style="margin-top: 20px;">
         <button
           type="submit"
-          style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px;"
+          style="padding: 10px 20px; background-color: rgb(254, 67, 101); color: white; border: none; border-radius: 40px;"
         >
-          分享音乐
+        Share
         </button>
       </div>
     </form>
