@@ -57,71 +57,69 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      phone: '',
-      verificationCode: '',
-      generatedCode: '', // 存储生成的验证码
-      username: '',
-      password: '',
-      confirmPassword: '',
-      passwordMismatch: false, // 控制密码错误消息
-      codeError: false, // 控制验证码错误消息
-      isCodeSending: false, // 控制是否在发送验证码
-      countdown: 0, // 倒计时
-    };
-  },
-  methods: {
-    // 模拟发送验证码
-    sendVerificationCode() {
-      if (!this.phone) {
-        alert("Please enter a valid phone number");
-        return;
-      }
-      this.isCodeSending = true;
-      this.generatedCode = Math.floor(100000 + Math.random() * 900000).toString(); // 随机6位验证码
-      console.log("Generated Code:", this.generatedCode); // 控制台输出验证码
-      setTimeout(() => {
-        alert("Verification code sent to your phone!");
-        this.isCodeSending = false;
-        this.startCountdown();
-      }, 1000); // 模拟网络请求延迟
-    },
-    // 启动倒计时
-    startCountdown() {
-      this.countdown = 60;
-      const interval = setInterval(() => {
-        this.countdown--;
-        if (this.countdown <= 0) {
-          clearInterval(interval);
-        }
-      }, 1000);
-    },
-    handleRegister() {
-      // 检查密码是否一致
-      if (this.password !== this.confirmPassword) {
-        this.passwordMismatch = true;
-        return;
-      } else {
-        this.passwordMismatch = false;
-      }
-      // 检查验证码是否正确
-      if (this.verificationCode !== this.generatedCode) {
-        this.codeError = true;
-        return;
-      } else {
-        this.codeError = false;
-      }
-      // 这里可以执行注册操作，例如发送请求到后台
-      console.log("Registering...", {
-        phone: this.phone,
-        username: this.username,
-        password: this.password,
-      });
-    },
-  },
+<script setup>
+import { ref} from 'vue';
+
+const phone = ref('');
+const verificationCode = ref('');
+const generatedCode = ref(''); // 存储生成的验证码
+const username = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const passwordMismatch = ref(false); // 控制密码错误消息
+const codeError = ref(false); // 控制验证码错误消息
+const isCodeSending = ref(false); // 控制是否在发送验证码
+const countdown = ref(0); // 倒计时
+
+// 模拟发送验证码
+const sendVerificationCode = () => {
+  if (!phone.value) {
+    alert('Please enter a valid phone number');
+    return;
+  }
+  isCodeSending.value = true;
+  generatedCode.value = Math.floor(100000 + Math.random() * 900000).toString(); // 随机6位验证码
+  console.log('Generated Code:', generatedCode.value); // 控制台输出验证码
+  setTimeout(() => {
+    alert('Verification code sent to your phone!');
+    isCodeSending.value = false;
+    startCountdown();
+  }, 1000); // 模拟网络请求延迟
+};
+
+// 启动倒计时
+const startCountdown = () => {
+  countdown.value = 60;
+  const interval = setInterval(() => {
+    countdown.value--;
+    if (countdown.value <= 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
+};
+
+// 处理注册
+const handleRegister = () => {
+  // 检查密码是否一致
+  if (password.value !== confirmPassword.value) {
+    passwordMismatch.value = true;
+    return;
+  } else {
+    passwordMismatch.value = false;
+  }
+  // 检查验证码是否正确
+  if (verificationCode.value !== generatedCode.value) {
+    codeError.value = true;
+    return;
+  } else {
+    codeError.value = false;
+  }
+  // 这里可以执行注册操作，例如发送请求到后台
+  console.log('Registering...', {
+    phone: phone.value,
+    username: username.value,
+    password: password.value,
+  });
 };
 </script>
 
@@ -168,6 +166,7 @@ export default {
   padding: 5px 15px;
   cursor: pointer;
   font-size: 12px;
+  align-self: flex-start;
 }
 
 .code-btn:disabled {

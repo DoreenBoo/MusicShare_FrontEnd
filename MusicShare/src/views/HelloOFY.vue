@@ -9,14 +9,12 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HelloOFY', // 这里是组件的名称
-  props: {
-    title: String
-  },
-}
+<script setup>
+defineProps({
+  title: String
+});
 </script>
+
 
 <style scoped>
 /* 确保容器的高度为100vh，覆盖整个视口 */
