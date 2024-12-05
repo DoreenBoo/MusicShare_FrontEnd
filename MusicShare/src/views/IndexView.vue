@@ -9,9 +9,10 @@
         :style="{ lineHeight: '64px' }"
       >
         <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
-        <a-menu-item key="2">CLASSIC</a-menu-item>
-        <a-menu-item key="3"><router-link to="/index/share">SHARE</router-link></a-menu-item>
-        <a-menu-item key="4" style="margin-top: 20px;margin-bottom: -13px;">
+        <a-menu-item key="2">FOLLOW</a-menu-item>
+        <a-menu-item key="3">CLASSIC</a-menu-item>
+        <a-menu-item key="4"><router-link to="/index/share">SHARE</router-link></a-menu-item>
+        <a-menu-item key="5" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
             v-model:value="value"
             placeholder="input search text"
@@ -20,7 +21,7 @@
           />
         </a-menu-item>
 
-        <a-menu-item key="5" style="margin-left: auto;">
+        <a-menu-item key="6" style="margin-left: auto;">
           <a-dropdown>
             <template #overlay>
               <a-menu @click="onClick">

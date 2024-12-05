@@ -19,43 +19,43 @@
     }"
   >
     <!-- 用户自定义标题 -->
-    <div style="margin-bottom: 20px;">
+    <div style="margin-bottom: 20px">
       <h3>Share Your Music!</h3>
     </div>
 
     <!-- 音乐上传表单 -->
-    <form @submit.prevent="submitForm">
+    <form @submit.prevent="submitForm" style="width: 100%; display: flex; flex-direction: column">
       <!-- 标题输入框 -->
-      <div style="margin-bottom: 15px;">
-        <label for="title" style="font-size: 16px;">Title</label>
+      <div style="margin-bottom: 15px">
+        <label for="title" style="font-size: 16px">Title</label>
         <input
           id="title"
           v-model="musicTitle"
           type="text"
           placeholder="输入标题"
-          style="padding: 10px; width: 100%; border-radius:40px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px"
         />
       </div>
 
       <!-- 文案输入框 -->
-      <div style="margin-bottom: 15px;">
-        <label for="description" style="font-size: 16px;">Text</label>
+      <div style="margin-bottom: 15px">
+        <label for="description" style="font-size: 16px">Text</label>
         <textarea
           id="description"
           v-model="musicDescription"
           placeholder="输入音乐文案"
           rows="4"
-          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px"
         ></textarea>
       </div>
 
       <!-- 音乐类型选择 -->
-      <div style="margin-bottom: 15px;">
-        <label for="musicType" style="font-size: 16px;">MusicType</label>
+      <div style="margin-bottom: 15px">
+        <label for="musicType" style="font-size: 16px">MusicType</label>
         <select
           id="musicType"
           v-model="musicType"
-          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px;"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px"
         >
           <option value="pop">流行</option>
           <option value="rock">摇滚</option>
@@ -64,80 +64,70 @@
           <option value="jazz">爵士</option>
         </select>
       </div>
-      <div style="margin-top: 30px; width: '100%';">
-      <h3>分享链接</h3>
-      <input
-        v-model="shareLink"
-        type="text"
-        placeholder="分享链接"
-        style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ccc; border-radius: 40px;"
-      />
-      <button
-        @click="copyLink"
-        style="margin-top: 10px; padding: 10px; background-color: #2196F3; color: white; border: none; border-radius: 40px;"
-      >
-        Copy
-      </button>
-    </div>
+
+      <!-- 分享链接 -->
+      <div style="margin-bottom: 15px">
+        <label for="sharelink" style="font-size: 16px">分享链接</label>
+        <input
+          id="sharelink"
+          v-model="musiclink"
+          type="text"
+          placeholder="输入分享链接"
+          style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px"
+        />
+      </div>
 
       <!-- 音乐文件上传 -->
-      <div style="margin-bottom: 15px;">
-        <label for="musicFile" style="font-size: 16px;">上传音乐</label>
+      <div style="margin-bottom: 15px">
+        <label for="musicFile" style="font-size: 16px">上传音乐</label>
         <input
           id="musicFile"
           type="file"
           accept="audio/*"
           @change="handleFileChange"
-          style="margin-top: 5px;"
+          style="margin-top: 5px"
         />
       </div>
 
       <!-- 提交按钮 -->
-      <div style="margin-top: 20px;">
+      <div style="margin-top: 20px; display: flex; justify-content: center;">
         <button
           type="submit"
-          style="padding: 10px 20px; background-color: rgb(254, 67, 101); color: white; border: none; border-radius: 40px;"
+          class="custom-button"
         >
-        Share
+          Share ->
+          
         </button>
       </div>
     </form>
-
-    <!-- 分享链接区域 (选填) -->
-    
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 // 定义页面的数据
-const musicTitle = ref('');
-const musicDescription = ref('');
-const musicType = ref('pop');
-const musicFile = ref(null);
-const shareLink = ref('');
+const musicTitle = ref('')
+const musicDescription = ref('')
+const musicType = ref('pop')
+const musicFile = ref(null)
+const shareLink = ref('')
 
 // 处理文件上传
 const handleFileChange = (event) => {
-  const file = event.target.files[0];
+  const file = event.target.files[0]
   if (file && file.type.startsWith('audio/')) {
-    musicFile.value = file;
+    musicFile.value = file
   } else {
-    alert('请选择一个有效的音乐文件');
+    alert('请选择一个有效的音乐文件')
   }
-};
+}
 
-// 提交表单，生成分享链接
+// 提交表单
 const submitForm = () => {
-  if (!musicTitle.value || !musicDescription.value || !musicFile.value) {
-    alert('请填写所有必填项并上传音乐文件');
-    return;
-  }
-
-  // 如果没有提供 shareLink，则不自动生成链接
-  if (!shareLink.value) {
-    shareLink.value = `https://musicshare.com/${musicType.value}/${encodeURIComponent(musicTitle.value)}`;
+  if (!musicTitle.value || !musicDescription.value || !musicFile.value || !shareLink.value) {
+    alert('请填写所有必填项并上传音乐文件')
+    return
   }
 
   console.log('分享的音乐信息：', {
@@ -146,19 +136,8 @@ const submitForm = () => {
     type: musicType.value,
     file: musicFile.value.name,
     link: shareLink.value,
-  });
-};
-
-// 复制分享链接
-const copyLink = () => {
-  if (shareLink.value) {
-    navigator.clipboard.writeText(shareLink.value).then(() => {
-      alert('链接已复制！');
-    });
-  } else {
-    alert('没有生成分享链接');
-  }
-};
+  })
+}
 </script>
 
 <style scoped>
@@ -167,8 +146,23 @@ button {
   font-size: 16px;
   transition: background-color 0.3s;
 }
-
-button:hover {
-  opacity: 0.9;
+.custom-button {
+  background-color: rgb(131, 175, 155); /* 默认背景颜色 */
+  color: white;
+  border-color: rgb(255, 255, 255); /* 默认边框颜色 */
+  transition: background-color 0.3s, border-color 0.3s; /* 添加平滑过渡效果 */
+  font-size: 50px;
+  width: 300px;
+  height: 100px;
+  border-radius: 40px; /* 设置圆角 */
+  border: none; /* 移除默认的边框 */
 }
+
+/* 鼠标悬停时的背景颜色 */
+.custom-button:hover {
+  background-color: rgb(254, 67, 101);
+  border-color: rgb(254, 67, 101); /* 悬停时改变边框颜色 */
+}
+
+
 </style>
