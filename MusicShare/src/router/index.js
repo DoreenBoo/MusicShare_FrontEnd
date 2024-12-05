@@ -7,6 +7,7 @@ import PersonalCenter from '../views/PersonalCenter.vue'
 import IndexView from '../views/IndexView.vue'
 import HomePage from '@/views/HomePage.vue'
 import SharePage from '@/views/SharePage.vue'
+import NoticePage from '@/views/NoticePage.vue'
 
 const routes = [
   {
@@ -37,10 +38,16 @@ const routes = [
         component: PersonalCenter,
       },
       {
+        path: 'notice',
+        name: 'NoticePage',
+        component: NoticePage,
+      },
+      {
         path: 'home',
         name: 'HomePage',
         component: HomePage,
       },
+
       {
         path: 'share',
         name: 'SharePage',

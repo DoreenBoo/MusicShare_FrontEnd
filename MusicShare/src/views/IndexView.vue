@@ -25,7 +25,7 @@
             <template #overlay>
               <a-menu @click="onClick">
                 <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
-                <a-menu-item key="12">消息</a-menu-item>
+                <a-menu-item key="12"><router-link to="/index/notice"></router-link>消息中心</a-menu-item>
                 <a-menu-item key="13">我的喜欢</a-menu-item>
               </a-menu>
             </template>
