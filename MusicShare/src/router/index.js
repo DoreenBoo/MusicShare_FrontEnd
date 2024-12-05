@@ -6,6 +6,7 @@ import RegisterPage from '../views/RegisterPage.vue' // 引入注册页面
 import PersonalCenter from '../views/PersonalCenter.vue'
 import IndexView from '../views/IndexView.vue'
 import HomePage from '@/views/HomePage.vue'
+import SharePage from '@/views/SharePage.vue'
 
 const routes = [
   {
@@ -39,6 +40,11 @@ const routes = [
         path: 'home',
         name: 'HomePage',
         component: HomePage,
+      },
+      {
+        path: 'share',
+        name: 'SharePage',
+        component: SharePage,
       },
     ],
   },

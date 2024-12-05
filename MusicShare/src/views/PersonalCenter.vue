@@ -76,8 +76,8 @@ import { ref } from 'vue';
 // 定义个人信息
 const nickname = ref('小帅');
 const phoneNumber = ref('13800000000');
-const gender = ref('男');
-const age = ref(25);
+const gender = ref('女');
+const age = ref(18);
 const signature = ref('保持微笑，走到哪里都能散发光芒。');
 
 // 定义按钮的点击事件

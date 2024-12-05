@@ -10,7 +10,7 @@
       >
         <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
         <a-menu-item key="2">Classic</a-menu-item>
-        <a-menu-item key="3">Share</a-menu-item>
+        <a-menu-item key="3"><router-link to="/index/share">Share</router-link></a-menu-item>
         <a-menu-item key="4" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
             v-model:value="value"
@@ -19,7 +19,7 @@
             @search="onSearch"
           />
         </a-menu-item>
-        
+
         <a-menu-item key="5" style="margin-left: auto;">
           <a-dropdown>
             <template #overlay>
@@ -27,7 +27,6 @@
                 <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
                 <a-menu-item key="12">消息</a-menu-item>
                 <a-menu-item key="13">我的喜欢</a-menu-item>
-                <a-menu-item key="13">退出登录</a-menu-item>
               </a-menu>
             </template>
             <a class="ant-dropdown-link" @click.prevent>
