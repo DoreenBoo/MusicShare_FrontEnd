@@ -1,7 +1,7 @@
 <template>
     <!-- 页面特定的内容 -->
     <a-breadcrumb style="margin: 16px 0">
-      <a-breadcrumb-item>首页</a-breadcrumb-item>
+      <a-breadcrumb-item>Home</a-breadcrumb-item>
     </a-breadcrumb>
 
     <!-- 页面具体的内容 -->
