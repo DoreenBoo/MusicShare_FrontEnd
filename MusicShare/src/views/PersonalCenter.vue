@@ -13,7 +13,7 @@
       minHeight: '600px',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'flex-start' /* 保证内容从上到下排列 */,
+      justifyContent: 'flex-start',
       alignItems: 'center',
       width: '100%',
     }"
@@ -44,9 +44,10 @@
       </div>
 
       <!-- 显示手机号 -->
-      <div style="margin-bottom: 15px">
+      <div style="margin-bottom: 15px; display: flex; align-items: center">
         <h2 style="display: inline-block; margin-right: 10px">手机号：</h2>
         <span>{{ phoneNumber }}</span>
+        <a-button type="link" @click="showPhoneDrawer" style="margin-left: 10px">换绑</a-button>
       </div>
 
       <!-- 显示性别 -->
@@ -68,9 +69,8 @@
       </div>
     </div>
 
-    <!-- 三个按钮 -->
+    <!-- 编辑个人信息按钮 -->
     <div style="margin-top: 30px">
-      <!-- 1.编辑个人信息抽屉 -->
       <a-button type="primary" @click="showDrawer">
         <template><PlusOutlined /></template>
         编辑个人信息
@@ -125,33 +125,31 @@
           </a-space>
         </template>
       </a-drawer>
-
-      <button
-        @click="changePassword"
-        style="
-          margin-right: 10px;
-          padding: 10px;
-          background-color: #2196f3;
-          color: white;
-          border: none;
-          border-radius: 5px;
-        "
-      >
-        更改密码
-      </button>
-      <button
-        @click="logout"
-        style="
-          padding: 10px;
-          background-color: #f44336;
-          color: white;
-          border: none;
-          border-radius: 5px;
-        "
-      >
-        退出登录
-      </button>
     </div>
+
+    <!-- 换绑手机号 Drawer -->
+    <a-drawer
+      title="换绑手机号"
+      :width="400"
+      :open="phoneDrawerOpen"
+      :footer-style="{ textAlign: 'right' }"
+      @close="closePhoneDrawer"
+    >
+      <a-form :model="phoneForm" layout="vertical">
+        <a-form-item label="新手机号" name="newPhone">
+          <a-input v-model:value="phoneForm.newPhone" placeholder="请输入新手机号" />
+        </a-form-item>
+        <a-form-item label="验证码" name="verificationCode">
+          <a-input v-model:value="phoneForm.verificationCode" placeholder="请输入验证码" />
+        </a-form-item>
+        <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
+          Get Code
+        </a-button>
+        <a-button type="primary" block @click="submitPhoneChange">
+          Submit
+        </a-button>
+      </a-form>
+    </a-drawer>
   </div>
 </template>
 
@@ -182,6 +180,30 @@ const onClose = () => {
   open.value = false
 }
 
+// 手机号换绑 Drawer 控制
+const phoneDrawerOpen = ref(false)
+const phoneForm = reactive({
+  newPhone: '',
+  verificationCode: '',
+})
+const showPhoneDrawer = () => {
+  phoneDrawerOpen.value = true
+}
+const closePhoneDrawer = () => {
+  phoneDrawerOpen.value = false
+}
+
+// 换绑手机号逻辑
+const sendCode = () => {
+  // 模拟发送验证码
+  console.log(`验证码已发送到 ${phoneForm.newPhone}`)
+}
+const submitPhoneChange = () => {
+  phoneNumber.value = phoneForm.newPhone
+  closePhoneDrawer()
+}
+
+
 // 提交表单方法
 const onSubmit = () => {
   // 更新页面数据
@@ -192,9 +214,8 @@ const onSubmit = () => {
 
   // 关闭 Drawer
   onClose()
-}
+  }
 </script>
-
 
 <style scoped>
 button {
