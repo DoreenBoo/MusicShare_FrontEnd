@@ -1,22 +1,22 @@
 <template>
-  <div style="display: flex; justify-content: space-between; padding: 20px;">
+  <div style="display: flex; justify-content: space-between; padding: 20px">
     <!-- 左侧审核音乐列表 -->
-    <div style="flex: 1; margin-right: 20px;">
+    <div style="flex: 1; margin-right: 20px">
       <h2>审核音乐信息</h2>
-      
+
       <!-- 搜索框 -->
-      <div style="margin-bottom: 20px;width: 700px;">
+      <div style="margin-bottom: 20px; width: 700px">
         <input
           v-model="searchQuery"
           type="text"
           placeholder="搜索音乐标题、描述或类型"
-          style="padding: 10px; width: 100%; border-radius: 40px; border: 1px solid #ccc;"
+          style="padding: 10px; width: 100%; border-radius: 40px; border: 1px solid #ccc"
         />
       </div>
 
       <!-- 音乐列表 -->
-      <div style="margin-top: 20px;">
-        <table border="1" style="width: 100%; border-collapse: collapse;">
+      <div style="margin-top: 20px">
+        <table border="1" style="width: 100%; border-collapse: collapse">
           <thead>
             <tr>
               <th>标题</th>
@@ -41,10 +41,17 @@
     </div>
 
     <!-- 右侧通过和拒绝的音乐 -->
-    <div style="flex: 1; margin-left: 20px;width: 500px;">
-      <div style="margin-bottom: 20px;">
+    <div style="flex: 1; margin-left: 20px; width: 500px">
+      <div style="margin-bottom: 20px">
         <h3>通过的音乐</h3>
-        <div style="padding: 10px; background-color: rgb(249, 205, 173); border-radius: 40px; min-height: 250px;">
+        <div
+          style="
+            padding: 10px;
+            background-color: rgb(249, 205, 173);
+            border-radius: 40px;
+            min-height: 250px;
+          "
+        >
           <ul>
             <li v-for="music in approvedMusic" :key="music.id">{{ music.title }}</li>
           </ul>
@@ -53,7 +60,14 @@
 
       <div>
         <h3>拒绝的音乐</h3>
-        <div style="padding: 10px; background-color: rgb(249, 205, 173); border-radius: 40px; min-height: 250px;">
+        <div
+          style="
+            padding: 10px;
+            background-color: rgb(249, 205, 173);
+            border-radius: 40px;
+            min-height: 250px;
+          "
+        >
           <ul>
             <li v-for="music in rejectedMusic" :key="music.id">{{ music.title }}</li>
           </ul>
@@ -120,7 +134,8 @@ table {
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   padding: 10px;
   text-align: left;
 }
@@ -129,6 +144,7 @@ button {
   padding: 5px 10px;
   margin: 5px;
   cursor: pointer;
+  border-radius: 40px;
 }
 
 button:hover {

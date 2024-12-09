@@ -46,7 +46,15 @@
     <!-- 历史删除用户部分 -->
     <div>
       <h2>历史删除</h2>
-      <div style="flex: 1; width: 500px; background-color: rgb(249, 205, 173); border-radius: 40px; min-height: 500px;">
+      <div
+        style="
+          flex: 1;
+          width: 500px;
+          background-color: rgb(249, 205, 173);
+          border-radius: 40px;
+          min-height: 500px;
+        "
+      >
         <div style="border: 1px solid #ccc; padding: 10px">
           <ul>
             <li v-for="deletedUser in deletedUsers" :key="deletedUser.id">
@@ -133,6 +141,7 @@ button {
   padding: 5px 10px;
   margin: 5px;
   cursor: pointer;
+  border-radius: 40px;
 }
 
 button:hover {
