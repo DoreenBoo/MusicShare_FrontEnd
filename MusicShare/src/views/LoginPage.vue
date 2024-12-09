@@ -7,14 +7,16 @@
       <div class="login-option">
         <button
           class="login-method-btn"
-          :class="{'active': loginMethod === 'username'}"
-          @click="loginMethod = 'username'"
+          :class="{ active: loginMethod === 'password' }"
+          :style="{ backgroundColor: loginMethod === 'password' ? 'rgb(252,157,154)' : '' }"
+          @click="loginMethod = 'password'"
         >
           Password
         </button>
         <button
           class="login-method-btn"
-          :class="{'active': loginMethod === 'phone'}"
+          :class="{ active: loginMethod === 'phone' }"
+          :style="{ backgroundColor: loginMethod === 'phone' ? 'rgb(252,157,154)' : '' }"
           @click="loginMethod = 'phone'"
         >
           Phone
@@ -22,12 +24,12 @@
       </div>
 
       <!-- 账号密码登录 -->
-      <div v-if="loginMethod === 'username'">
+      <div v-if="loginMethod === 'password'">
         <input
           type="text"
-          name="username"
-          v-model="username"
-          placeholder="username"
+          name="phone"
+          v-model="phone"
+          placeholder="phone"
           class="input-item"
         />
         <input
@@ -69,21 +71,15 @@
 
       <button class="btn" @click="handleLogin">Login</button>
     </div>
-
-    <div class="msg">
-      Don't have an account?
-      <router-link to="/register">Sign up</router-link>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-const loginMethod = ref('username'); // 默认登录方式：'username' 或 'phone'
-const username = ref('');
-const password = ref('');
+const loginMethod = ref('password'); // 默认登录方式：'password' 或 'phone'
 const phone = ref('');
+const password = ref('');
 const verificationCode = ref('');
 const generatedCode = ref(''); // 存储生成的验证码
 const countdown = ref(0); // 倒计时
@@ -119,15 +115,15 @@ const startCountdown = () => {
 
 // 处理登录
 const handleLogin = () => {
-  // 如果选择了用户名密码登录
-  if (loginMethod.value === 'username') {
-    if (!username.value || !password.value) {
+  // 如果选择了密码登录
+  if (loginMethod.value === 'password') {
+    if (!phone.value || !password.value) {
       loginError.value = true;
       return;
     }
     // 模拟登录操作
-    console.log('Logging in with username and password...', {
-      username: username.value,
+    console.log('Logging in with phone and password...', {
+      phone: phone.value,
       password: password.value,
     });
     loginError.value = false;
@@ -148,9 +144,7 @@ const handleLogin = () => {
 };
 </script>
 
-
 <style>
-/* 登录框样式 */
 .login-wrapper {
   background-color: rgb(249, 205, 173);
   width: 358px;
@@ -215,6 +209,7 @@ const handleLogin = () => {
   cursor: pointer;
   font-size: 14px;
   width: 48%;
+  transition: background-color 0.3s;
 }
 
 .login-method-btn.active {

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import HomePage from '../views/HomePage.vue'
 import HelloOFY from '../views/HelloOFY.vue'
 import LoginPage from '../views/LoginPage.vue'
 import RegisterPage from '../views/RegisterPage.vue' // 引入注册页面
@@ -8,6 +7,9 @@ import IndexView from '../views/IndexView.vue'
 import HomePage from '@/views/HomePage.vue'
 import SharePage from '@/views/SharePage.vue'
 import NoticePage from '@/views/NoticePage.vue'
+import AdminIndex from '@/views/AdminIndex.vue'
+import ManageUsers from '@/views/ManageUsers.vue'
+import ReviewMusic from '@/views/ReviewMusic.vue'
 
 const routes = [
   {
@@ -52,6 +54,23 @@ const routes = [
         path: 'share',
         name: 'SharePage',
         component: SharePage,
+      },
+    ],
+  },
+  {
+    path: '/adminindex',
+    name: 'AdminIndex',
+    component: AdminIndex,
+    children: [
+      {
+        path: 'manageusers',
+        name: 'ManageUsers',
+        component: ManageUsers,
+      },
+      {
+        path: 'reviewmusic',
+        name: 'ReviewMusic',
+        component: ReviewMusic,
       },
     ],
   },
