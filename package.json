@@ -2,7 +2,8 @@
 	"dependencies": {
 		"@ant-design/icons-vue": "^7.0.1",
 		"ant-design-vue": "~4.2.6",
-		"antd": "^5.22.2"
+		"antd": "^5.22.2",
+		"axios": "^1.7.9"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.26.0",
