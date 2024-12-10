@@ -10,7 +10,6 @@
       >
         <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
         <a-menu-item key="2"><router-link to="/index/follow">FOLLOW</router-link></a-menu-item>
-        <a-menu-item key="3"><router-link to="/index/classic"></router-link>CLASSIC</a-menu-item>
         <a-menu-item key="4"><router-link to="/index/share">SHARE</router-link></a-menu-item>
         <a-menu-item key="5" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
@@ -26,8 +25,8 @@
             <template #overlay>
               <a-menu @click="onClick">
                 <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
-                <a-menu-item key="12"><router-link to="/index/notice"></router-link>消息中心</a-menu-item>
-                <a-menu-item key="13">我的喜欢</a-menu-item>
+                <a-menu-item key="12"><router-link to="/index/notice">消息中心</router-link></a-menu-item>
+                <a-menu-item key="13"><router-link to="/index/collect">我的收藏</router-link></a-menu-item>
               </a-menu>
             </template>
             <a class="ant-dropdown-link" @click.prevent>

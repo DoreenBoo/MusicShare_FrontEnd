@@ -10,6 +10,7 @@ import AdminIndex from '@/views/AdminIndex.vue'
 import ManageUsers from '@/views/ManageUsers.vue'
 import ReviewMusic from '@/views/ReviewMusic.vue'
 import FollowPage from '@/views/FollowPage.vue'
+import CollectPage from '@/views/CollectPage.vue'
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
         path: 'notice',
         name: 'NoticePage',
         component: NoticePage,
+      },
+      {
+        path: 'collect',
+        name: 'CollectPage',
+        component: CollectPage,
       },
       {
         path: 'home',
