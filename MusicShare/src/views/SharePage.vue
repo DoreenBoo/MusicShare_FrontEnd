@@ -62,6 +62,7 @@
           <option value="hiphop">嘻哈</option>
           <option value="classical">古典</option>
           <option value="jazz">爵士</option>
+          <option value="other">其他</option>
         </select>
       </div>
 

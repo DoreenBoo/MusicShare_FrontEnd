@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HelloOFY from '../views/HelloOFY.vue'
 import LoginPage from '../views/LoginPage.vue'
-import RegisterPage from '../views/RegisterPage.vue' // 引入注册页面
 import PersonalCenter from '../views/PersonalCenter.vue'
 import IndexView from '../views/IndexView.vue'
 import HomePage from '@/views/HomePage.vue'
@@ -10,6 +9,7 @@ import NoticePage from '@/views/NoticePage.vue'
 import AdminIndex from '@/views/AdminIndex.vue'
 import ManageUsers from '@/views/ManageUsers.vue'
 import ReviewMusic from '@/views/ReviewMusic.vue'
+import FollowPage from '@/views/FollowPage.vue'
 
 const routes = [
   {
@@ -23,11 +23,6 @@ const routes = [
     path: '/login', // 新增登录页面路径
     name: 'LoginPage',
     component: LoginPage,
-  },
-  {
-    path: '/register',
-    name: 'RegisterPage',
-    component: RegisterPage,
   },
   {
     path: '/index',
@@ -48,6 +43,11 @@ const routes = [
         path: 'home',
         name: 'HomePage',
         component: HomePage,
+      },
+      {
+        path: 'follow',
+        name: 'FollowPage',
+        component: FollowPage,
       },
 
       {

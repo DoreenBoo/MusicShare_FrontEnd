@@ -55,7 +55,7 @@
           min-height: 500px;
         "
       >
-        <div style="border: 1px solid #ccc; padding: 10px">
+        <div style=" padding: 10px">
           <ul>
             <li v-for="deletedUser in deletedUsers" :key="deletedUser.id">
               {{ deletedUser.nickname }} ({{ deletedUser.phone }})
