@@ -11,6 +11,7 @@
         minHeight: '700px',
         flex: 1,
         width: '100%',
+
       }"
     >
       <a-row :gutter="8">

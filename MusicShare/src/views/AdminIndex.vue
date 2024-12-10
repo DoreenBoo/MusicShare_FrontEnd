@@ -24,11 +24,6 @@
 
     <!-- 页面内容 -->
     <div style="padding-top: 80px; display: flex; flex-direction: column; align-items: center;">
-      <!-- 仅在访问 AdminIndex 时显示欢迎信息 -->
-      <div v-if="$route.name === 'AdminIndex'">
-        <h2 class="welcome-text">Welcome, Admin</h2>
-      </div>
-
       <!-- 渲染子路由页面 -->
       <router-view />
     </div>
