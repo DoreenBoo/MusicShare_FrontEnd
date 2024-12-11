@@ -13,14 +13,14 @@
         flex: 1,
         width: '100%',
         display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        // justifyContent: 'center',
+        // alignItems: 'center',
         flexDirection: 'column',
       }"
     >
       <a-row :gutter="8" justify="center">
         <a-col :span="6" v-for="item in cards" :key="item.title" style="display: flex; justify-content: center;">
-          <a-card hoverable style="width: 250px; margin: 10px;">
+          <a-card hoverable style="width: 300px; margin: 10px;">
             <template #cover>
               <img alt="example" :src="item.image" />
             </template>

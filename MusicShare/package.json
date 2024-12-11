@@ -12,10 +12,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^7.0.1",
+    "ant-design-vue": "^4.2.6",
     "pinia": "^2.2.6",
     "vue": "^3.5.12",
-    "vue-router": "^4.4.5",
-    "ant-design-vue": "^4.2.6"
+    "vue-router": "^4.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",
