@@ -3,7 +3,6 @@
     <a-breadcrumb-item>Follow</a-breadcrumb-item>
   </a-breadcrumb>
   <div>
-    <!-- Cards Section -->
     <div
       :style="{
         background: 'rgb(249,205,173)',
@@ -12,22 +11,17 @@
         flex: 1,
         width: '100%',
         display: 'flex',
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flexDirection: 'column',
-
       }"
     >
-      <a-row :gutter="8" >
-        <a-col :span="6" v-for="item in cards" :key="item.title" style="display: flex; justify-content: center;">
-          <a-card hoverable style="width: 300px; margin: 10px;">       <!-- 卡片宽度和间距 -->
-            <template #cover>
-              <img alt="example" :src="item.image" />
-            </template>
-            <a-card-meta :title="item.title">
-              <template #description>{{ item.description }}</template>
-            </a-card-meta>
-          </a-card>
+      <a-row :gutter="8">
+        <a-col
+          v-for="item in cards"
+          :key="item.title"
+          :span="6"
+          style="display: flex; justify-content: center;"
+        >
+          <CardComponent :card="item" @updateCard="updateCard" />
         </a-col>
       </a-row>
     </div>
@@ -35,29 +29,21 @@
 </template>
 
 <script setup>
-// 卡片内容
-const cards = [
-  {
-    title: '注意看，这是小帅',
-    description: 'This is a handsome girl.',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-  },
-  {
-    title: '注意看，这是小帅',
-    description: 'This is a handsome girl.',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-  },
-  {
-    title: '注意看，这是小帅',
-    description: 'This is a handsome girl.',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-  },
-  {
-    title: '注意看，这是小帅',
-    description: 'This is a handsome girl.',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-  },
-];
+import useCardStore from '../useCardStore'  // 确保路径正确
+import CardComponent from '../components/CardComponent.vue'  // 确保路径正确
+
+const cardStore = useCardStore()
+const cards = cardStore.getCards() // 获取卡片数据
+
+const updateCard = (updatedCard) => {
+  // 更新卡片的逻辑
+  const index = cards.findIndex(card => card.title === updatedCard.title);
+  if (index !== -1) {
+    cards[index] = updatedCard; // 更新卡片数据
+  }
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+/* 添加样式（如有需要） */
+</style>

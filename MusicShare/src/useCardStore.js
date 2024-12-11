@@ -1,4 +1,3 @@
-// src/useCardStore.js
 import { ref } from 'vue'
 
 const cards = ref([
