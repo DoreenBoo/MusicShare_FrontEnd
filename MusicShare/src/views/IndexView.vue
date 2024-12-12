@@ -13,23 +13,24 @@
         <a-menu-item key="4"><router-link to="/index/share">SHARE</router-link></a-menu-item>
         <a-menu-item key="5" style="margin-top: 20px;margin-bottom: -13px;">
           <a-input-search
-            v-model:value="value"
+            v-model:value="searchValue"
             placeholder="input search text"
             style="width: 200px"
-            @search="onSearch"
+            @search="handleSearch"
           />
         </a-menu-item>
 
         <a-menu-item key="6" style="margin-left: auto;">
           <a-dropdown>
             <template #overlay>
-              <a-menu @click="onClick">
+              <a-menu @click="handleMenuClick">
                 <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
                 <a-menu-item key="12"><router-link to="/index/notice">消息中心</router-link></a-menu-item>
                 <a-menu-item key="13"><router-link to="/index/collect">我的收藏</router-link></a-menu-item>
+                <a-menu-item key="14" style="color: red;">退出登录</a-menu-item>
               </a-menu>
             </template>
-            <a class="ant-dropdown-link" @click.prevent> 
+            <a class="ant-dropdown-link" @click.prevent>
               <a-avatar src="..\src\assets\images\注意看，这是小帅.jpg" />
               <DownOutlined />
             </a>
@@ -38,40 +39,55 @@
       </a-menu>
     </a-layout-header>
 
-    <!-- Content (插入页面特有内容) -->
+    <!-- Content -->
     <a-layout-content :style="{ padding: '0 50px', flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }">
       <slot></slot>
       <router-view></router-view>
-    </a-layout-content>     
-
+    </a-layout-content>
 
     <!-- Footer -->
     <a-layout-footer style="text-align: center; padding: 0; background-color: rgb(252,157,154)">
       ONLY FOR YOU by @DODO @Lucas @小何先生
     </a-layout-footer>
+
+    <!-- 引入退出登录弹窗组件 -->
+    <LogoutConfirm @confirm="confirmLogout" @cancel="cancelLogout" ref="logoutConfirm" />
   </a-layout>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-
+import LogoutConfirm from '../components/LogoutConfirm.vue';
 
 const selectedKeys = ref(['1']);
-const value = ref('');
+const searchValue = ref('');
 
-const onSearch = (searchValue) => {
-  console.log('use value', searchValue);
+// 引用 LogoutConfirm 组件
+const logoutConfirm = ref(null);
+
+// 处理搜索
+const handleSearch = (value) => {
+  console.log('搜索内容:', value);
 };
 
-const onClick = ({ key }) => {
-  console.log(`Click on item ${key}`);
-  if (key === '11') {
-    console.log('Clicked on the first menu item');
-  } else if (key === '12') {
-    console.log('Clicked on the second menu item');
-  } else if (key === '13') {
-    console.log('Clicked on the third menu item');
+// 菜单点击处理
+const handleMenuClick = ({ key }) => {
+  console.log(`点击了菜单项 ${key}`);
+  if (key === '14') {
+    // 调用弹窗显示方法
+    logoutConfirm.value.open();
   }
+};
+
+// 确认退出登录
+const confirmLogout = () => {
+  console.log('用户确认退出登录');
+  window.location.href = '/login'; // 模拟退出
+};
+
+// 取消退出登录
+const cancelLogout = () => {
+  console.log('用户取消退出登录');
 };
 </script>
