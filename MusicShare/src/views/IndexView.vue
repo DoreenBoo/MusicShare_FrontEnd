@@ -3,31 +3,24 @@
     <!-- Header -->
     <a-layout-header style="padding: 0; height: 64px; background-color: rgb(254, 67, 101);">
       <div class="logo" />
-      <a-menu
-        v-model:selectedKeys="selectedKeys"
-        mode="horizontal"
-        :style="{ lineHeight: '64px' }"
-      >
+      <a-menu v-model:selectedKeys="selectedKeys" mode="horizontal" :style="{ lineHeight: '64px' }">
         <a-menu-item key="1"> <router-link to="/index/home">HOME</router-link></a-menu-item>
         <a-menu-item key="2"><router-link to="/index/follow">FOLLOW</router-link></a-menu-item>
         <a-menu-item key="4"><router-link to="/index/share">SHARE</router-link></a-menu-item>
         <a-menu-item key="5" style="margin-top: 20px;margin-bottom: -13px;">
-          <a-input-search
-            v-model:value="searchValue"
-            placeholder="input search text"
-            style="width: 200px"
-            @search="handleSearch"
-          />
+          <a-input-search v-model:value="searchValue" placeholder="input search text" style="width: 200px"
+            @search="handleSearch" />
         </a-menu-item>
 
         <a-menu-item key="6" style="margin-left: auto;">
           <a-dropdown>
             <template #overlay>
               <a-menu @click="handleMenuClick">
-                <a-menu-item key="11"><router-link to="/index/person">个人中心</router-link></a-menu-item>
-                <a-menu-item key="12"><router-link to="/index/notice">消息中心</router-link></a-menu-item>
-                <a-menu-item key="13"><router-link to="/index/collect">我的收藏</router-link></a-menu-item>
-                <a-menu-item key="14" style="color: red;">退出登录</a-menu-item>
+                <a-menu-item key="11"><router-link to="/index/person">Personal Center</router-link></a-menu-item>
+                <a-menu-item key="12"><router-link to="/index/notice">Notice</router-link></a-menu-item>
+                <a-menu-item key="13"><router-link to="/index/collect">Collection</router-link></a-menu-item>
+                <a-menu-item key="14"><router-link to="/index/personalshare">My ShareMusic</router-link></a-menu-item>
+                <a-menu-item key="15" style="color: red;">LogOut</a-menu-item>
               </a-menu>
             </template>
             <a class="ant-dropdown-link" @click.prevent>
@@ -74,7 +67,7 @@ const handleSearch = (value) => {
 // 菜单点击处理
 const handleMenuClick = ({ key }) => {
   console.log(`点击了菜单项 ${key}`);
-  if (key === '14') {
+  if (key === '15') {
     // 调用弹窗显示方法
     logoutConfirm.value.open();
   }

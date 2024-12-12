@@ -125,17 +125,28 @@
       <a-drawer title="修改密码" :width="400" :open="passwordDrawerOpen" :footer-style="{ textAlign: 'right' }"
         @close="closePasswordDrawer">
         <a-form :model="passwordForm" layout="vertical">
-          <a-form-item label="旧密码" name="oldPassword">
-            <a-input-password v-model:value="passwordForm.oldPassword" placeholder="请输入旧密码" />
+          <a-form-item label="手机号" name="phoneNumber">
+            <a-input v-model:value="passwordForm.phoneNumber" placeholder="请输入手机号" />
           </a-form-item>
+
+          <a-form-item label="验证码" name="verificationCode">
+            <a-input v-model:value="passwordForm.verificationCode" placeholder="请输入验证码" />
+          </a-form-item>
+
+          <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
+            Get Code
+          </a-button>
+
           <a-form-item label="新密码" name="newPassword">
             <a-input-password v-model:value="passwordForm.newPassword" placeholder="请输入新密码" />
           </a-form-item>
+
           <a-form-item label="确认新密码" name="confirmPassword">
             <a-input-password v-model:value="passwordForm.confirmPassword" placeholder="请再次输入新密码" />
           </a-form-item>
+
           <a-button type="primary" block @click="submitPasswordChange">
-            确认修改
+            Confirm Modification
           </a-button>
         </a-form>
       </a-drawer>
@@ -181,6 +192,12 @@ const form = reactive({
   gender: '',
   signature: '',
 })
+const passwordForm = reactive({
+  phoneNumber: '',
+  verificationCode: '',
+  newPassword: '',
+  confirmPassword: '',
+})
 
 // Drawer 显示控制
 const open = ref(false)
@@ -191,38 +208,34 @@ const onClose = () => {
   open.value = false
 }
 // 密码更改 Drawer 显示控制
-const passwordDrawerOpen = ref(false);
-const passwordForm = reactive({
-  oldPassword: '',
-  newPassword: '',
-  confirmPassword: '',
-});
-
+const passwordDrawerOpen = ref(false)
 const showPasswordDrawer = () => {
-  passwordDrawerOpen.value = true;
-};
+  passwordDrawerOpen.value = true
+}
 
 const closePasswordDrawer = () => {
-  passwordDrawerOpen.value = false;
-};
+  passwordDrawerOpen.value = false
+}
 
 const submitPasswordChange = () => {
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-    console.log('两次输入的密码不一致');
-    return;
+    console.log('两次输入的密码不一致')
+    return
   }
 
   // 在此处处理密码修改逻辑，例如发起 API 请求
-  console.log('密码已成功修改');
+  console.log(`手机号：${passwordForm.phoneNumber} 的密码已成功修改`)
 
   // 清空表单数据
-  passwordForm.oldPassword = '';
-  passwordForm.newPassword = '';
-  passwordForm.confirmPassword = '';
+  passwordForm.phoneNumber = ''
+  passwordForm.verificationCode = ''
+  passwordForm.newPassword = ''
+  passwordForm.confirmPassword = ''
 
   // 关闭 Drawer
-  closePasswordDrawer();
-};
+  closePasswordDrawer()
+}
+
 
 // 手机号换绑 Drawer 控制
 const phoneDrawerOpen = ref(false)
@@ -272,5 +285,4 @@ button {
 button:hover {
   opacity: 0.9;
 }
-
 </style>

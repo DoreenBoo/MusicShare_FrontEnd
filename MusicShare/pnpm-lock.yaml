@@ -61,7 +61,7 @@ importers:
         specifier: ^25.0.1
         version: 25.0.1
       prettier:
-        specifier: ^3.3.3
+        specifier: ^3.4.2
         version: 3.4.2
       sass-embedded:
         specifier: ^1.82.0

@@ -185,7 +185,6 @@ const handleLogin = () => {
         {
           phone: phone.value,
           code: verificationCode.value,
-          code: Number(verificationCode.value),
         },
         {
           headers: {

@@ -11,6 +11,7 @@ import ManageUsers from '@/views/ManageUsers.vue'
 import ReviewMusic from '@/views/ReviewMusic.vue'
 import FollowPage from '@/views/FollowPage.vue'
 import CollectPage from '@/views/CollectPage.vue'
+import PersonalShare from '@/views/PersonalShare.vue'
 
 const routes = [
   {
@@ -44,6 +45,11 @@ const routes = [
         path: 'collect',
         name: 'CollectPage',
         component: CollectPage,
+      },
+      {
+        path: 'personalshare',
+        name: 'PersonalShare',
+        component: PersonalShare,
       },
       {
         path: 'home',

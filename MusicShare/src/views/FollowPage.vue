@@ -3,24 +3,17 @@
     <a-breadcrumb-item>Follow</a-breadcrumb-item>
   </a-breadcrumb>
   <div>
-    <div
-      :style="{
-        background: 'rgb(249,205,173)',
-        padding: '30px',
-        minHeight: '700px',
-        flex: 1,
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-      }"
-    >
+    <div :style="{
+      background: 'rgb(249,205,173)',
+      padding: '30px',
+      minHeight: '700px',
+      flex: 1,
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+    }">
       <a-row :gutter="8">
-        <a-col
-          v-for="item in cards"
-          :key="item.title"
-          :span="6"
-          style="display: flex; justify-content: center;"
-        >
+        <a-col v-for="item in cards" :key="item.title" :span="6" style="display: flex; justify-content: center;">
           <CardComponent :card="item" @updateCard="updateCard" />
         </a-col>
       </a-row>
