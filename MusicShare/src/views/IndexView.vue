@@ -29,7 +29,7 @@
                 <a-menu-item key="13"><router-link to="/index/collect">我的收藏</router-link></a-menu-item>
               </a-menu>
             </template>
-            <a class="ant-dropdown-link" @click.prevent>
+            <a class="ant-dropdown-link" @click.prevent> 
               <a-avatar src="..\src\assets\images\注意看，这是小帅.jpg" />
               <DownOutlined />
             </a>

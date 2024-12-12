@@ -1,7 +1,6 @@
 <template>
   <!-- 页面特定内容 -->
-  <a-breadcrumb style="margin: 16px 0">
-    <a-breadcrumb-item>Home</a-breadcrumb-item>
+  <a-breadcrumb style="margin: 16px 0">1
     <a-breadcrumb-item>MusicShare</a-breadcrumb-item>
   </a-breadcrumb>
 

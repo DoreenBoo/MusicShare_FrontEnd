@@ -26,6 +26,7 @@
       </a-row>
     </div>
   </div>
+  <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4777430_1zg2x8pq844.css" />
 </template>
 
 <script setup>

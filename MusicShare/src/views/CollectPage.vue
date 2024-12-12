@@ -13,53 +13,68 @@
         flex: 1,
         width: '100%',
         display: 'flex',
-        // justifyContent: 'center',
-        // alignItems: 'center',
         flexDirection: 'column',
       }"
     >
       <a-row :gutter="8" justify="center">
-        <a-col :span="6" v-for="item in cards" :key="item.title" style="display: flex; justify-content: center;">
-          <a-card hoverable style="width: 300px; margin: 10px;">
-            <template #cover>
-              <img alt="example" :src="item.image" />
-            </template>
-            <a-card-meta :title="item.title">
-              <template #description>
-                {{ item.description }}
-              </template>
-            </a-card-meta>
-          </a-card>
+        <a-col :span="6" v-for="item in collectedCards" :key="item.title" style="display: flex; justify-content: center;">
+          <CardComponent 
+            :card="item" 
+            @updateCard="updateCard" 
+          />
         </a-col>
       </a-row>
     </div>
   </div>
+    <link rel="stylesheet" href="//at.alicdn.com/t/c/font_4777430_1zg2x8pq844.css" />
 </template>
 
 <script setup>
-// 收藏的音乐卡片数据
-const cards = [
+import { ref } from 'vue'
+import CardComponent from '../components/CardComponent.vue'  // 确保路径正确
+
+// 模拟从数据源获取用户收藏的音乐卡片数据
+const collectedCards = ref([
   {
     title: '流行专辑',
     description: '这是一张流行音乐专辑。',
     image: '../src/assets/images/注意看，这是小帅.jpg',
+    nickname: '用户A',
+    isLiked: false,
+    isCollected: true,
   },
   {
     title: '摇滚专辑',
     description: '摇滚不死！！！',
     image: '../src/assets/images/注意看，这是小帅.jpg',
+    nickname: '用户B',
+    isLiked: false,
+    isCollected: true,
   },
   {
     title: '古典专辑',
     description: '这是一张古典音乐专辑。',
     image: '../src/assets/images/注意看，这是小帅.jpg',
+    nickname: '用户C',
+    isLiked: false,
+    isCollected: true,
   },
   {
     title: '其他专辑',
     description: '这是一张其他类型音乐专辑。',
     image: '../src/assets/images/注意看，这是小帅.jpg',
+    nickname: '用户D',
+    isLiked: false,
+    isCollected: true,
   },
-];
+]);
+
+const updateCard = (updatedCard) => {
+  const index = collectedCards.value.findIndex(card => card.title === updatedCard.title);
+  if (index !== -1) {
+    collectedCards.value[index] = updatedCard; // 更新卡片数据
+  }
+}
 </script>
 
 <style scoped>
