@@ -3,10 +3,11 @@ import { ref } from 'vue'
 const cards = ref([
   {
     title: '流行',
-    description: 'This is a handsome girl.',
+    description: '鬼迷心窍--李宗盛',
     image: '../src/assets/images/注意看，这是小帅.jpg',
     category: '流行',
     nickname: '小帅',
+    link:'https://pan.baidu.com/s/1x938deyZ89dOPTfgiFQS2w',
     isLiked: false,
     isCollected: false,
   },
@@ -16,6 +17,7 @@ const cards = ref([
     image: '../src/assets/images/注意看，这是小帅.jpg',
     category: '摇滚',
     nickname: '摇滚爱好者',
+    link:'https://pan.baidu.com/s/1F84xNPFABri0ZGx4iznXXw',
     isLiked: false,
     isCollected: false,
   },
