@@ -6,18 +6,16 @@
   </a-breadcrumb>
 
   <!-- 页面具体的内容 -->
-  <div
-    :style="{
-      background: 'rgb(249,205,173)',
-      padding: '30px',
-      minHeight: '600px',
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      width: '100%',
-    }"
-  >
+  <div :style="{
+    background: 'rgb(249,205,173)',
+    padding: '30px',
+    minHeight: '600px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: '100%',
+  }">
     <!-- 头像部分 -->
     <a class="ant-dropdown-link" @click.prevent>
       <a-avatar :size="200" src="..\src\assets\images\注意看，这是小帅.jpg" />
@@ -28,15 +26,13 @@
     <h3 style="margin-top: 20px">粉丝：100 关注：50</h3>
 
     <!-- 个人信息部分 -->
-    <div
-      style="
+    <div style="
         background-color: rgb(200, 200, 169);
         padding: 20px;
         border-radius: 10px;
         width: 100%;
         margin-top: 20px;
-      "
-    >
+      ">
       <!-- 显示昵称 -->
       <div style="margin-bottom: 15px">
         <h2 style="display: inline-block; margin-right: 10px">昵称：</h2>
@@ -72,17 +68,21 @@
     <!-- 编辑个人信息按钮 -->
     <div style="margin-top: 30px">
       <a-button type="primary" @click="showDrawer">
-        <template><PlusOutlined /></template>
+        <template>
+          <PlusOutlined />
+        </template>
         编辑个人信息
       </a-button>
-      <a-drawer
-        title="编辑您的个人信息"
-        :width="720"
-        :open="open"
-        :body-style="{ paddingBottom: '80px' }"
-        :footer-style="{ textAlign: 'right' }"
-        @close="onClose"
-      >
+      <a-button type="primary" @click="showPasswordDrawer">
+        <template>
+          <PlusOutlined />
+        </template>
+        修改密码
+      </a-button>
+
+
+      <a-drawer title="编辑您的个人信息" :width="720" :open="open" :body-style="{ paddingBottom: '80px' }"
+        :footer-style="{ textAlign: 'right' }" @close="onClose">
         <a-form :model="form" :rules="rules" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="12">
@@ -109,11 +109,7 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Description" name="signature">
-                <a-textarea
-                  v-model:value="form.signature"
-                  :rows="4"
-                  placeholder="Please enter your signature"
-                />
+                <a-textarea v-model:value="form.signature" :rows="4" placeholder="Please enter your signature" />
               </a-form-item>
             </a-col>
           </a-row>
@@ -125,16 +121,29 @@
           </a-space>
         </template>
       </a-drawer>
+      <!-- 更改密码 Drawer -->
+      <a-drawer title="修改密码" :width="400" :open="passwordDrawerOpen" :footer-style="{ textAlign: 'right' }"
+        @close="closePasswordDrawer">
+        <a-form :model="passwordForm" layout="vertical">
+          <a-form-item label="旧密码" name="oldPassword">
+            <a-input-password v-model:value="passwordForm.oldPassword" placeholder="请输入旧密码" />
+          </a-form-item>
+          <a-form-item label="新密码" name="newPassword">
+            <a-input-password v-model:value="passwordForm.newPassword" placeholder="请输入新密码" />
+          </a-form-item>
+          <a-form-item label="确认新密码" name="confirmPassword">
+            <a-input-password v-model:value="passwordForm.confirmPassword" placeholder="请再次输入新密码" />
+          </a-form-item>
+          <a-button type="primary" block @click="submitPasswordChange">
+            确认修改
+          </a-button>
+        </a-form>
+      </a-drawer>
     </div>
 
     <!-- 换绑手机号 Drawer -->
-    <a-drawer
-      title="换绑手机号"
-      :width="400"
-      :open="phoneDrawerOpen"
-      :footer-style="{ textAlign: 'right' }"
-      @close="closePhoneDrawer"
-    >
+    <a-drawer title="换绑手机号" :width="400" :open="phoneDrawerOpen" :footer-style="{ textAlign: 'right' }"
+      @close="closePhoneDrawer">
       <a-form :model="phoneForm" layout="vertical">
         <a-form-item label="新手机号" name="newPhone">
           <a-input v-model:value="phoneForm.newPhone" placeholder="请输入新手机号" />
@@ -150,7 +159,9 @@
         </a-button>
       </a-form>
     </a-drawer>
+
   </div>
+
 </template>
 
 <script setup>
@@ -179,6 +190,39 @@ const showDrawer = () => {
 const onClose = () => {
   open.value = false
 }
+// 密码更改 Drawer 显示控制
+const passwordDrawerOpen = ref(false);
+const passwordForm = reactive({
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+});
+
+const showPasswordDrawer = () => {
+  passwordDrawerOpen.value = true;
+};
+
+const closePasswordDrawer = () => {
+  passwordDrawerOpen.value = false;
+};
+
+const submitPasswordChange = () => {
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    console.log('两次输入的密码不一致');
+    return;
+  }
+
+  // 在此处处理密码修改逻辑，例如发起 API 请求
+  console.log('密码已成功修改');
+
+  // 清空表单数据
+  passwordForm.oldPassword = '';
+  passwordForm.newPassword = '';
+  passwordForm.confirmPassword = '';
+
+  // 关闭 Drawer
+  closePasswordDrawer();
+};
 
 // 手机号换绑 Drawer 控制
 const phoneDrawerOpen = ref(false)
@@ -214,7 +258,7 @@ const onSubmit = () => {
 
   // 关闭 Drawer
   onClose()
-  }
+}
 </script>
 
 <style scoped>
@@ -222,9 +266,11 @@ button {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s;
+  margin: 10px;
 }
 
 button:hover {
   opacity: 0.9;
 }
+
 </style>
