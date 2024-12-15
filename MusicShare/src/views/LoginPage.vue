@@ -90,7 +90,7 @@ const sendVerificationCode = () => {
   }
   isCodeSending.value = true
   axios
-    .post('http://localhost:8083/music-share/common/sendSms', null, {
+    .post('http://localhost:8083/share-app-api/communication/sendSms', null, {
       params: {
         phone: phone.value,
       },
@@ -127,19 +127,19 @@ const handleLogin = () => {
       errorMessage.value = 'Phone number and password are required'
       return
     }
-    // 模拟登录操作
+
     axios
       .post(
-        'http://localhost:8083/music-share/auth/login_by_password',  // 假设你已经创建了此API
+        'http://localhost:8083/share-app-api/auth/login_by_password', // 假设你已经创建了此API
         {
           phone: phone.value,
-          password: password.value
+          password: password.value,
         },
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
-        }
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        },
       )
       .then((response) => {
         console.log('Response Data:', response.data) // 打印后端返回的数据
@@ -181,7 +181,7 @@ const handleLogin = () => {
     // 登录操作
     axios
       .post(
-        'http://localhost:8083/music-share/auth/login_by_code',
+        'http://localhost:8083/share-app-api/auth/login_by_code',
         {
           phone: phone.value,
           code: verificationCode.value,

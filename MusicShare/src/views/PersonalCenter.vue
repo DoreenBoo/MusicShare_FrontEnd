@@ -6,16 +6,18 @@
   </a-breadcrumb>
 
   <!-- 页面具体的内容 -->
-  <div :style="{
-    background: 'rgb(249,205,173)',
-    padding: '30px',
-    minHeight: '600px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    width: '100%',
-  }">
+  <div
+    :style="{
+      background: 'rgb(249,205,173)',
+      padding: '30px',
+      minHeight: '600px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      width: '100%',
+    }"
+  >
     <!-- 头像部分 -->
     <a class="ant-dropdown-link" @click.prevent>
       <a-avatar :size="200" src="..\src\assets\images\注意看，这是小帅.jpg" />
@@ -26,13 +28,15 @@
     <h3 style="margin-top: 20px">粉丝：100 关注：50</h3>
 
     <!-- 个人信息部分 -->
-    <div style="
+    <div
+      style="
         background-color: rgb(200, 200, 169);
         padding: 20px;
         border-radius: 10px;
         width: 100%;
         margin-top: 20px;
-      ">
+      "
+    >
       <!-- 显示昵称 -->
       <div style="margin-bottom: 15px">
         <h2 style="display: inline-block; margin-right: 10px">昵称：</h2>
@@ -80,9 +84,14 @@
         修改密码
       </a-button>
 
-
-      <a-drawer title="编辑您的个人信息" :width="720" :open="open" :body-style="{ paddingBottom: '80px' }"
-        :footer-style="{ textAlign: 'right' }" @close="onClose">
+      <a-drawer
+        title="编辑您的个人信息"
+        :width="720"
+        :open="open"
+        :body-style="{ paddingBottom: '80px' }"
+        :footer-style="{ textAlign: 'right' }"
+        @close="onClose"
+      >
         <a-form :model="form" :rules="rules" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="12">
@@ -95,8 +104,8 @@
             <a-col :span="12">
               <a-form-item label="Gender" name="gender">
                 <a-select v-model:value="form.gender" placeholder="Please choose the gender">
-                  <a-select-option value="男">男</a-select-option>
-                  <a-select-option value="女">女</a-select-option>
+                  <a-select-option value="1">男</a-select-option>
+                  <a-select-option value="2">女</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -109,7 +118,11 @@
           <a-row :gutter="16">
             <a-col :span="24">
               <a-form-item label="Description" name="signature">
-                <a-textarea v-model:value="form.signature" :rows="4" placeholder="Please enter your signature" />
+                <a-textarea
+                  v-model:value="form.signature"
+                  :rows="4"
+                  placeholder="Please enter your signature"
+                />
               </a-form-item>
             </a-col>
           </a-row>
@@ -122,8 +135,13 @@
         </template>
       </a-drawer>
       <!-- 更改密码 Drawer -->
-      <a-drawer title="修改密码" :width="400" :open="passwordDrawerOpen" :footer-style="{ textAlign: 'right' }"
-        @close="closePasswordDrawer">
+      <a-drawer
+        title="修改密码"
+        :width="400"
+        :open="passwordDrawerOpen"
+        :footer-style="{ textAlign: 'right' }"
+        @close="closePasswordDrawer"
+      >
         <a-form :model="passwordForm" layout="vertical">
           <a-form-item label="手机号" name="phoneNumber">
             <a-input v-model:value="passwordForm.phoneNumber" placeholder="请输入手机号" />
@@ -133,7 +151,7 @@
             <a-input v-model:value="passwordForm.verificationCode" placeholder="请输入验证码" />
           </a-form-item>
 
-          <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
+          <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode2">
             Get Code
           </a-button>
 
@@ -142,7 +160,10 @@
           </a-form-item>
 
           <a-form-item label="确认新密码" name="confirmPassword">
-            <a-input-password v-model:value="passwordForm.confirmPassword" placeholder="请再次输入新密码" />
+            <a-input-password
+              v-model:value="passwordForm.confirmPassword"
+              placeholder="请再次输入新密码"
+            />
           </a-form-item>
 
           <a-button type="primary" block @click="submitPasswordChange">
@@ -153,8 +174,13 @@
     </div>
 
     <!-- 换绑手机号 Drawer -->
-    <a-drawer title="换绑手机号" :width="400" :open="phoneDrawerOpen" :footer-style="{ textAlign: 'right' }"
-      @close="closePhoneDrawer">
+    <a-drawer
+      title="换绑手机号"
+      :width="400"
+      :open="phoneDrawerOpen"
+      :footer-style="{ textAlign: 'right' }"
+      @close="closePhoneDrawer"
+    >
       <a-form :model="phoneForm" layout="vertical">
         <a-form-item label="新手机号" name="newPhone">
           <a-input v-model:value="phoneForm.newPhone" placeholder="请输入新手机号" />
@@ -165,18 +191,15 @@
         <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
           Get Code
         </a-button>
-        <a-button type="primary" block @click="submitPhoneChange">
-          Submit
-        </a-button>
+        <a-button type="primary" block @click="submitPhoneChange"> Submit </a-button>
       </a-form>
     </a-drawer>
-
   </div>
-
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
+import axios from 'axios'
 
 // 页面显示的数据
 const nickname = ref('小帅')
@@ -207,6 +230,50 @@ const showDrawer = () => {
 const onClose = () => {
   open.value = false
 }
+
+// 提交表单方法
+const onSubmit = () => {
+  // 调用后端 API 修改信息
+  console.log('传给后端的性别值:', form.gender)
+
+  const token = getAccessToken() // 获取令牌
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/update',
+      {
+        nickname: form.nickname,
+        age: form.age,
+        gender: form.gender,
+        signature: form.signature,
+      },
+      {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      if (response.data.code === 0) {
+        console.log('个人信息修改成功')
+        nickname.value = form.nickname
+        gender.value = form.gender
+        age.value = form.age
+        signature.value = form.signature
+        onClose()
+      } else {
+        console.error('个人信息修改失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+
+// 关闭 Drawer
+
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
 // 密码更改 Drawer 显示控制
 const passwordDrawerOpen = ref(false)
 const showPasswordDrawer = () => {
@@ -223,8 +290,33 @@ const submitPasswordChange = () => {
     return
   }
 
+  const token = getAccessToken()
+  console.log('Token:', token)
+  axios
+    .post(
+      `http://localhost:8083/share-app-api/user/changePassword?phone=${passwordForm.phoneNumber}&code=${passwordForm.verificationCode}&password=${passwordForm.newPassword}`,
+      null, // 根据后端接口修改URL
+
+      {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      if (response.data.code === 0) {
+        console.log('密码修改成功')
+        // 提交成功后的后续处理，比如清空表单、提示用户成功
+        closePasswordDrawer()
+      } else {
+        console.error('密码修改失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+
   // 在此处处理密码修改逻辑，例如发起 API 请求
-  console.log(`手机号：${passwordForm.phoneNumber} 的密码已成功修改`)
 
   // 清空表单数据
   passwordForm.phoneNumber = ''
@@ -235,7 +327,6 @@ const submitPasswordChange = () => {
   // 关闭 Drawer
   closePasswordDrawer()
 }
-
 
 // 手机号换绑 Drawer 控制
 const phoneDrawerOpen = ref(false)
@@ -252,25 +343,86 @@ const closePhoneDrawer = () => {
 
 // 换绑手机号逻辑
 const sendCode = () => {
-  // 模拟发送验证码
-  console.log(`验证码已发送到 ${phoneForm.newPhone}`)
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/sendSms',
+      new URLSearchParams({
+        phone: phoneForm.newPhone,
+       // 参数名改为 'phone' 符合后端要求
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
+    )
+
+    .then((response) => {
+      console.log('验证码发送结果:', response.data)
+      if (response.data.code === 0) {
+        console.log('验证码发送成功')
+      } else {
+        console.error('验证码发送失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+const sendCode2 = () => {
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/sendSms',
+      new URLSearchParams({
+        phone: passwordForm.phoneNumber, // 参数名改为 'phone' 符合后端要求
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
+    )
+
+    .then((response) => {
+      console.log('验证码发送结果:', response.data)
+      if (response.data.code === 0) {
+        console.log('验证码发送成功')
+      } else {
+        console.error('验证码发送失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
 }
 const submitPhoneChange = () => {
-  phoneNumber.value = phoneForm.newPhone
-  closePhoneDrawer()
-}
-
-
-// 提交表单方法
-const onSubmit = () => {
-  // 更新页面数据
-  nickname.value = form.nickname
-  gender.value = form.gender
-  age.value = form.age
-  signature.value = form.signature
-
-  // 关闭 Drawer
-  onClose()
+  console.log('submitPhoneChange 方法被调用')
+  const token = getAccessToken() // 获取令牌
+  console.log('Authorization:', `Bearer ${token}`)
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/changePhone',
+      new URLSearchParams({
+        phone: phoneForm.newPhone,
+        code: phoneForm.verificationCode,
+      }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      console.log('换绑手机号结果:', response.data)
+      if (response.data.code === 0) {
+        phoneNumber.value = phoneForm.newPhone
+        localStorage.setItem('token', response.data.accessToken)
+        console.log('手机号换绑成功')
+        closePhoneDrawer()
+      } else {
+        console.error('手机号换绑失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
 }
 </script>
 
