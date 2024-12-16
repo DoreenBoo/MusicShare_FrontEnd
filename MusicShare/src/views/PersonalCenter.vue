@@ -23,7 +23,15 @@
     </a>
 
     <!-- 显示粉丝和关注 -->
-    <h3 style="margin-top: 20px">粉丝：100 关注：50</h3>
+    <h3 style="margin-top: 20px; display: flex; gap: 10px;">
+      <span @click="showFans" style="cursor: pointer; color: blue;">粉丝：100</span>
+      <span @click="showFollowing" style="cursor: pointer; color: blue;">关注：50</span>
+    </h3>
+
+
+    <!-- 引入粉丝与关注弹窗组件 -->
+    <FollowersListModal :visible="fansModalVisible" :list="fans" title="粉丝列表" @close="closeFans" />
+    <FollowersListModal :visible="followingModalVisible" :list="following" title="关注列表" @close="closeFollowing" />
 
     <!-- 个人信息部分 -->
     <div style="
@@ -177,6 +185,27 @@
 
 <script setup>
 import { reactive, ref } from 'vue'
+import FollowersListModal from '../components/FollowersListModal.vue'
+import { fans, following } from '../mockData'
+
+// 控制粉丝和关注弹窗
+const fansModalVisible = ref(false)
+const followingModalVisible = ref(false)
+
+const showFans = () => {
+  fansModalVisible.value = true
+}
+const closeFans = () => {
+  fansModalVisible.value = false
+}
+
+const showFollowing = () => {
+  followingModalVisible.value = true
+}
+const closeFollowing = () => {
+  followingModalVisible.value = false
+}
+
 
 // 页面显示的数据
 const nickname = ref('小帅')

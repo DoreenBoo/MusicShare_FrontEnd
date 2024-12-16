@@ -46,10 +46,6 @@
       <h3>评论通知：</h3>
       <p>有人评论了你发布的内容！赶紧去查看吧。</p>
     </div>
-    <div v-if="activeType === '点赞'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
-      <h3>点赞通知：</h3>
-      <p>你的内容获得了点赞！继续加油吧！</p>
-    </div>
     <div v-if="activeType === '通知'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
       <h3>系统通知：</h3>
       <p>系统公告：我们即将进行一次版本更新，敬请期待！</p>
@@ -62,7 +58,7 @@
 import { ref } from 'vue';
 
 // 定义消息类型
-const messageTypes = ['粉丝', '评论', '点赞', '通知'];
+const messageTypes = ['粉丝', '评论', '通知'];
 
 // 当前选择的消息类型
 const activeType = ref('粉丝');
