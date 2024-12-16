@@ -46,10 +46,7 @@
       <h3>评论通知：</h3>
       <p>有人评论了你发布的内容！赶紧去查看吧。</p>
     </div>
-    <div v-if="activeType === '点赞'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
-      <h3>点赞通知：</h3>
-      <p>你的内容获得了点赞！继续加油吧！</p>
-    </div>
+
     <div v-if="activeType === '通知'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
       <h3>系统通知：</h3>
       <p>系统公告：我们即将进行一次版本更新，敬请期待！</p>
@@ -60,17 +57,93 @@
 <script setup>
 // 引入 Vue 的响应式数据
 import { ref } from 'vue';
+import axios from 'axios';
 
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
 // 定义消息类型
-const messageTypes = ['粉丝', '评论', '点赞', '通知'];
+const messageTypes = ['粉丝', '评论',  '通知'];
 
 // 当前选择的消息类型
 const activeType = ref('粉丝');
 
+// 用于存储从后端获取的数据
+const fans = ref([]);
+const comments = ref([]);
+const notifications = ref([]);
+
 // 设置当前激活的消息类型
 const setActiveType = (type) => {
   activeType.value = type;
+// 根据消息类型请求数据
+  if (type === '粉丝') {
+    fetchFans();
+  } else if (type === '评论') {
+    fetchComments();
+  } else if (type === '通知') {
+    fetchNotifications();
+  }
 };
+
+// 获取粉丝数据
+const fetchFans = () => {
+  const token = getAccessToken()
+  console.log('Authorization:', `Bearer ${token}`)
+  axios.post('http://localhost:8083/share-app-api/user/Fan',
+    {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+  ) 
+  
+    .then((response) => {
+      fans.value = response.data; // 假设后端返回的数据是粉丝列表
+    })
+    .catch((error) => {
+      console.error('获取粉丝数据失败:', error);
+    });
+};
+
+// 获取评论数据
+const fetchComments = () => {
+  const token = getAccessToken()
+  axios.post('http://localhost:8083/share-app-api/user/Comment',
+    {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+  ) 
+    .then((response) => {
+      comments.value = response.data; // 假设后端返回的数据是评论列表
+    })
+    .catch((error) => {
+      console.error('获取评论数据失败:', error);
+    });
+};
+
+// 获取通知数据
+const fetchNotifications = () => {
+  const token = getAccessToken()
+  axios.post('http://localhost:8083/share-app-api/user/GetNotification',
+    {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+  ) 
+    .then((response) => {
+      notifications.value = response.data; // 假设后端返回的数据是通知列表
+    })
+    .catch((error) => {
+      console.error('获取通知数据失败:', error);
+    });
+};
+
+// 初始加载粉丝数据
+fetchFans();
 </script>
 
 <style scoped>

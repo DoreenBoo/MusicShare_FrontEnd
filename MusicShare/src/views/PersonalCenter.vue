@@ -25,8 +25,23 @@
     </a>
 
     <!-- 显示粉丝和关注 -->
-    <h3 style="margin-top: 20px">粉丝：100 关注：50</h3>
-
+    <h3 style="margin-top: 20px; display: flex; gap: 10px">
+      <span @click="showFans" style="cursor: pointer; color: blue">粉丝：100</span>
+      <span @click="showFollowing" style="cursor: pointer; color: blue">关注：50</span>
+    </h3>
+    <!-- 引入粉丝与关注弹窗组件 -->
+    <FollowersListModal
+      :visible="fansModalVisible"
+      :list="fans"
+      title="粉丝列表"
+      @close="closeFans"
+    />
+    <FollowersListModal
+      :visible="followingModalVisible"
+      :list="following"
+      title="关注列表"
+      @close="closeFollowing"
+    />
     <!-- 个人信息部分 -->
     <div
       style="
@@ -198,6 +213,8 @@
 </template>
 
 <script setup>
+import FollowersListModal from '../components/FollowersListModal.vue'
+import { fans, following } from '../mockData'
 import { reactive, ref } from 'vue'
 import axios from 'axios'
 
@@ -207,6 +224,23 @@ const phoneNumber = ref('13800000000')
 const gender = ref('女')
 const age = ref(18)
 const signature = ref('保持微笑，走到哪里都能散发光芒。')
+// 控制粉丝和关注弹窗
+const fansModalVisible = ref(false)
+const followingModalVisible = ref(false)
+
+const showFans = () => {
+  fansModalVisible.value = true
+}
+const closeFans = () => {
+  fansModalVisible.value = false
+}
+
+const showFollowing = () => {
+  followingModalVisible.value = true
+}
+const closeFollowing = () => {
+  followingModalVisible.value = false
+}
 
 // 表单数据
 const form = reactive({
@@ -348,7 +382,7 @@ const sendCode = () => {
       'http://localhost:8083/share-app-api/communication/sendSms',
       new URLSearchParams({
         phone: phoneForm.newPhone,
-       // 参数名改为 'phone' 符合后端要求
+        // 参数名改为 'phone' 符合后端要求
       }).toString(),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -405,7 +439,7 @@ const submitPhoneChange = () => {
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `${token}`, // 确保带上正确的授权信息
+          Authorization: `Bearer ${token}`, // 确保带上正确的授权信息
         },
       },
     )

@@ -24,13 +24,10 @@
         >
           <div style="flex: 1">
             <span>分享人：{{ card.nickname }}</span>
+            <a-button type="primary" style="margin-left: 10px;">关注</a-button>
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 10px">
-            <i
-              :class="card.isLiked ? 'iconfont icon-dianzan1' : 'iconfont icon-dianzan'"
-              style="font-size: 24px; cursor: pointer"
-              @click.stop="toggleLike"
-            ></i>
+
             <i
               class="iconfont icon-pinglun"
               style="font-size: 24px; cursor: pointer"
@@ -107,10 +104,6 @@ const openModal = () => {
   isModalVisible.value = true
 }
 
-const toggleLike = () => {
-  const updatedCard = { ...props.card, isLiked: !props.card.isLiked }
-  emit('updateCard', updatedCard)
-}
 
 const toggleCollect = () => {
   const updatedCard = { ...props.card, isCollected: !props.card.isCollected }
