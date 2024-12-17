@@ -24,7 +24,8 @@
               </a-menu>
             </template>
             <a class="ant-dropdown-link" @click.prevent>
-              <a-avatar src="..\src\assets\images\注意看，这是小帅.jpg" />
+              <!-- 动态绑定头像 -->
+              <a-avatar :src="avatarSrc" />
               <DownOutlined />
             </a>
           </a-dropdown>
@@ -49,12 +50,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,watch} from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import LogoutConfirm from '../components/LogoutConfirm.vue';
 
+
 const selectedKeys = ref(['1']);
 const searchValue = ref('');
+// 初始化头像 src，可以从 localStorage 中读取，如果没有则使用默认头像
+const avatarSrc = ref(localStorage.getItem('avatarUrl') || '..\src\assets\images\注意看，这是小帅.jpg');
+
+// 使用 watch 监听 avatarSrc 的变化，确保更新到 localStorage
+watch(avatarSrc, (newAvatar) => {
+  if (newAvatar) {
+    localStorage.setItem('avatarUrl', newAvatar);
+  }
+});
 
 // 引用 LogoutConfirm 组件
 const logoutConfirm = ref(null);

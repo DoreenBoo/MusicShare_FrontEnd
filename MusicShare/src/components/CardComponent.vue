@@ -24,10 +24,11 @@
         >
           <div style="flex: 1">
             <span>分享人：{{ card.nickname }}</span>
-            <a-button type="primary" style="margin-left: 10px;">关注</a-button>
+            <a-button type="primary" style="margin-left: 10px" @click="addFollow">{{
+              card.isFollowed ? '取消关注' : '关注'
+            }}</a-button>
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 10px">
-
             <i
               class="iconfont icon-pinglun"
               style="font-size: 24px; cursor: pointer"
@@ -84,6 +85,7 @@
 import { ref, defineEmits } from 'vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import axios from 'axios'
 dayjs.extend(relativeTime)
 
 const props = defineProps({
@@ -99,11 +101,13 @@ const isModalVisible = ref(false)
 const newComment = ref('')
 const comments = ref([]) // 存储评论列表
 const showComments = ref(false) // 控制评论区域的显示状态
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
 
 const openModal = () => {
   isModalVisible.value = true
 }
-
 
 const toggleCollect = () => {
   const updatedCard = { ...props.card, isCollected: !props.card.isCollected }
@@ -112,6 +116,30 @@ const toggleCollect = () => {
 
 const toggleComments = () => {
   showComments.value = !showComments.value // 切换评论区域的显示状态
+}
+const addFollow = () => {
+  const token = getAccessToken()
+  const url = props.card.isFollowed ? '/remove-follow' : '/add-follow' // 根据当前状态判断请求的 URL
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/GetNotification',
+      {
+        followedId: props.card.id,
+      },
+      {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    ) // 向后端发送请求，传递目标用户 ID
+    .then((response) => {
+      // 假设后端返回结果表明关注状态已经更新
+      const updatedCard = { ...props.card, isFollowed: !props.card.isFollowed }
+      emit('updateCard', updatedCard) // 更新父组件的数据
+    })
+    .catch((error) => {
+      console.error('关注操作失败', error)
+    })
 }
 
 const addComment = () => {

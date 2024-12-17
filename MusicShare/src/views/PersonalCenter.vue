@@ -19,15 +19,17 @@
     }"
   >
     <!-- 头像部分 -->
-    <a class="ant-dropdown-link" @click.prevent>
-      <a-avatar :size="200" src="..\src\assets\images\注意看，这是小帅.jpg" />
-      <DownOutlined />
+    <a class="ant-dropdown-link" @click.prevent="selectImage">
+      <a-avatar :size="200" :src="avatarSrc" />
     </a>
+    <input type="file" ref="fileInput" @change="onFileChange" style="display: none" />
 
     <!-- 显示粉丝和关注 -->
     <h3 style="margin-top: 20px; display: flex; gap: 10px">
-      <span @click="showFans" style="cursor: pointer; color: blue">粉丝：100</span>
-      <span @click="showFollowing" style="cursor: pointer; color: blue">关注：50</span>
+      <span @click="showFans" style="cursor: pointer; color: blue">粉丝：{{ fansCount }}</span>
+      <span @click="showFollowing" style="cursor: pointer; color: blue"
+        >关注: {{ followingCount }}</span
+      >
     </h3>
     <!-- 引入粉丝与关注弹窗组件 -->
     <FollowersListModal
@@ -224,17 +226,128 @@ const phoneNumber = ref('13800000000')
 const gender = ref('女')
 const age = ref(18)
 const signature = ref('保持微笑，走到哪里都能散发光芒。')
+
+// 头像
+const avatarSrc =ref(localStorage.getItem('avatarUrl')); // 从本地存储读取头像 URL
+const fileInput = ref(null);
+
+const selectImage = () => {
+  fileInput.value.click() // 触发文件选择对话框
+}
+
+const onFileChange = (event) => {
+  const file = event.target.files[0]
+  const token = getAccessToken()
+  if (file) {
+
+    // 预览本地文件（FileReader 生成 blob URL）
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      avatarSrc.value = e.target.result; // 临时展示本地预览的图片
+    };
+
+    reader.readAsDataURL(file);
+    //文件上传
+    const formData = new FormData()
+    formData.append('file', file) // 将文件附加到FormData对象
+
+
+
+    // 发送头像上传请求
+    axios
+      .post(
+        'http://localhost:8083/share-app-api/user/upload/avatar',
+         formData ,
+        {
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'multipart/form-data', // 设置为文件上传格式
+          },
+        },
+      )
+      .then((response) => {
+        if (response.data.code === 0) {
+          // 成功上传，更新头像
+          avatarSrc.value = response.data.data ;// 假设后端返回的是头像 URL
+           localStorage.setItem('avatarUrl', avatarSrc.value);
+          console.log('头像上传成功:', avatarSrc.value);
+        } else {
+          console.error('头像上传失败:', response.data.msg)
+        }
+      })
+      .catch((error) => {
+        console.error('请求错误:', error)
+      })
+  }
+}
 // 控制粉丝和关注弹窗
 const fansModalVisible = ref(false)
 const followingModalVisible = ref(false)
 
 const showFans = () => {
+  fetchFansCount()
   fansModalVisible.value = true
 }
 const closeFans = () => {
+  fetchFollowingCount()
   fansModalVisible.value = false
 }
 
+// 动态粉丝和关注数
+const fansCount = ref(0)
+const followingCount = ref(0)
+
+const fetchFansCount = () => {
+  const token = getAccessToken()
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/CountFan',
+      {},
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    )
+    .then((response) => {
+      console.log('粉丝数量:', response.data)
+      if (response.data.code === 0) {
+        fansCount.value = response.data.data // 假设后端返回的是粉丝数
+        console.log('粉丝数量获取成功:', fansCount.value)
+      } else {
+        console.error('粉丝数量获取失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+
+const fetchFollowingCount = () => {
+  const token = getAccessToken()
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/CountFollowed',
+      {},
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    )
+    .then((response) => {
+      console.log('关注数量:', response.data)
+      if (response.data.code === 0) {
+        followingCount.value = response.data.data // 假设后端返回的是关注数
+        console.log('关注数量获取成功:', followingCount.value)
+      } else {
+        console.error('关注数量获取失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
 const showFollowing = () => {
   followingModalVisible.value = true
 }

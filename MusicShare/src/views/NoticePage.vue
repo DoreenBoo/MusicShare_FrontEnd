@@ -38,10 +38,6 @@
     </div>
 
     <!-- 消息内容部分 -->
-    <div v-if="activeType === '粉丝'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
-      <h3>粉丝通知：</h3>
-      <p>你有新的粉丝！快来看看是谁关注了你吧。</p>
-    </div>
     <div v-if="activeType === '评论'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
       <h3>评论通知：</h3>
       <p>有人评论了你发布的内容！赶紧去查看吧。</p>
@@ -63,13 +59,12 @@ const getAccessToken = () => {
   return localStorage.getItem('token')
 }
 // 定义消息类型
-const messageTypes = ['粉丝', '评论',  '通知'];
+const messageTypes = [ '评论',  '通知'];
 
 // 当前选择的消息类型
-const activeType = ref('粉丝');
+const activeType = ref('评论');
 
 // 用于存储从后端获取的数据
-const fans = ref([]);
 const comments = ref([]);
 const notifications = ref([]);
 
@@ -77,39 +72,18 @@ const notifications = ref([]);
 const setActiveType = (type) => {
   activeType.value = type;
 // 根据消息类型请求数据
-  if (type === '粉丝') {
-    fetchFans();
-  } else if (type === '评论') {
+  if (type === '评论') {
     fetchComments();
   } else if (type === '通知') {
     fetchNotifications();
   }
 };
 
-// 获取粉丝数据
-const fetchFans = () => {
-  const token = getAccessToken()
-  console.log('Authorization:', `Bearer ${token}`)
-  axios.post('http://localhost:8083/share-app-api/user/Fan',
-    {
-        headers: {
-          Authorization: `${token}`, // 确保带上正确的授权信息
-        },
-      },
-  ) 
-  
-    .then((response) => {
-      fans.value = response.data; // 假设后端返回的数据是粉丝列表
-    })
-    .catch((error) => {
-      console.error('获取粉丝数据失败:', error);
-    });
-};
 
 // 获取评论数据
 const fetchComments = () => {
   const token = getAccessToken()
-  axios.post('http://localhost:8083/share-app-api/user/Comment',
+  axios.post('http://localhost:8083/share-app-api/user/Comment',{}, 
     {
         headers: {
           Authorization: `${token}`, // 确保带上正确的授权信息
@@ -127,7 +101,7 @@ const fetchComments = () => {
 // 获取通知数据
 const fetchNotifications = () => {
   const token = getAccessToken()
-  axios.post('http://localhost:8083/share-app-api/user/GetNotification',
+  axios.post('http://localhost:8083/share-app-api/user/GetNotification',{},
     {
         headers: {
           Authorization: `${token}`, // 确保带上正确的授权信息
@@ -142,8 +116,12 @@ const fetchNotifications = () => {
     });
 };
 
-// 初始加载粉丝数据
-fetchFans();
+// 初始加载默认类型的数据
+if (activeType.value === '评论') {
+  fetchComments();
+} else if (activeType.value === '通知') {
+  fetchNotifications();
+}
 </script>
 
 <style scoped>
