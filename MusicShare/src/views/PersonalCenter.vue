@@ -17,22 +17,18 @@
     width: '100%',
   }">
     <!-- 头像部分 -->
-    <a class="ant-dropdown-link" @click.prevent>
+    <a class="ant-dropdown-link" @click.prevent="selectImage">
       <a-avatar :size="200" src="..\src\assets\images\注意看，这是小帅.jpg" />
-      <DownOutlined />
     </a>
-
+    <input type="file" ref="fileInput" @change="onFileChange" style="display: none" />
     <!-- 显示粉丝和关注 -->
-    <h3 style="margin-top: 20px; display: flex; gap: 10px;">
-      <span @click="showFans" style="cursor: pointer; color: blue;">粉丝：100</span>
-      <span @click="showFollowing" style="cursor: pointer; color: blue;">关注：50</span>
+    <h3 style="margin-top: 20px; display: flex; gap: 10px">
+      <span @click="showFans" style="cursor: pointer; color: blue">粉丝：100</span>
+      <span @click="showFollowing" style="cursor: pointer; color: blue">关注：50</span>
     </h3>
-
-
     <!-- 引入粉丝与关注弹窗组件 -->
     <FollowersListModal :visible="fansModalVisible" :list="fans" title="粉丝列表" @close="closeFans" />
     <FollowersListModal :visible="followingModalVisible" :list="following" title="关注列表" @close="closeFollowing" />
-
     <!-- 个人信息部分 -->
     <div style="
         background-color: rgb(200, 200, 169);
@@ -88,7 +84,6 @@
         修改密码
       </a-button>
 
-
       <a-drawer title="编辑您的个人信息" :width="720" :open="open" :body-style="{ paddingBottom: '80px' }"
         :footer-style="{ textAlign: 'right' }" @close="onClose">
         <a-form :model="form" :rules="rules" layout="vertical">
@@ -103,8 +98,8 @@
             <a-col :span="12">
               <a-form-item label="Gender" name="gender">
                 <a-select v-model:value="form.gender" placeholder="Please choose the gender">
-                  <a-select-option value="男">男</a-select-option>
-                  <a-select-option value="女">女</a-select-option>
+                  <a-select-option value="1">男</a-select-option>
+                  <a-select-option value="2">女</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -141,7 +136,7 @@
             <a-input v-model:value="passwordForm.verificationCode" placeholder="请输入验证码" />
           </a-form-item>
 
-          <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
+          <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode2">
             Get Code
           </a-button>
 
@@ -159,7 +154,6 @@
         </a-form>
       </a-drawer>
     </div>
-
     <!-- 换绑手机号 Drawer -->
     <a-drawer title="换绑手机号" :width="400" :open="phoneDrawerOpen" :footer-style="{ textAlign: 'right' }"
       @close="closePhoneDrawer">
@@ -173,20 +167,50 @@
         <a-button type="primary" block style="margin-bottom: 16px" @click="sendCode">
           Get Code
         </a-button>
-        <a-button type="primary" block @click="submitPhoneChange">
-          Submit
-        </a-button>
+        <a-button type="primary" block @click="submitPhoneChange"> Submit </a-button>
       </a-form>
     </a-drawer>
-
   </div>
-
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
 import FollowersListModal from '../components/FollowersListModal.vue'
 import { fans, following } from '../mockData'
+import { reactive, ref, onMounted } from 'vue'
+import axios from 'axios'
+
+import defaultAvatar from '../assets/images/注意看，这是小帅.jpg';
+
+// 页面显示的数据
+const nickname = ref('小帅')
+const phoneNumber = ref('')
+const gender = ref('女')
+const age = ref(18)
+const signature = ref('保持微笑，走到哪里都能散发光芒。')
+
+// 头像
+const avatarSrc = ref(defaultAvatar); // 默认头像
+const fileInput = ref(null);
+
+const selectImage = () => {
+  fileInput.value.click(); // 触发文件选择对话框
+};
+
+const onFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      avatarSrc.value = e.target.result; // 更新头像
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+// 在页面加载时从 localStorage 读取手机号
+onMounted(() => {
+  phoneNumber.value = localStorage.getItem('phoneNumber') || '未绑定';
+});
 
 // 控制粉丝和关注弹窗
 const fansModalVisible = ref(false)
@@ -205,15 +229,6 @@ const showFollowing = () => {
 const closeFollowing = () => {
   followingModalVisible.value = false
 }
-
-
-// 页面显示的数据
-const nickname = ref('小帅')
-const phoneNumber = ref('13800000000')
-const gender = ref('女')
-const age = ref(18)
-const signature = ref('保持微笑，走到哪里都能散发光芒。')
-
 // 表单数据
 const form = reactive({
   nickname: '',
@@ -236,6 +251,49 @@ const showDrawer = () => {
 const onClose = () => {
   open.value = false
 }
+
+// 提交表单方法
+const onSubmit = () => {
+  // 调用后端 API 修改信息
+  console.log('传给后端的性别值:', form.gender)
+
+  const token = getAccessToken() // 获取令牌
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/update',
+      {
+        nickname: form.nickname,
+        age: form.age,
+        gender: form.gender,
+        signature: form.signature,
+      },
+      {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      if (response.data.code === 0) {
+        console.log('个人信息修改成功')
+        nickname.value = form.nickname
+        gender.value = form.gender
+        age.value = form.age
+        signature.value = form.signature
+        onClose()
+      } else {
+        console.error('个人信息修改失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+
+// 关闭 Drawer
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
 // 密码更改 Drawer 显示控制
 const passwordDrawerOpen = ref(false)
 const showPasswordDrawer = () => {
@@ -252,8 +310,33 @@ const submitPasswordChange = () => {
     return
   }
 
+  const token = getAccessToken()
+  console.log('Token:', token)
+  axios
+    .post(
+      `http://localhost:8083/share-app-api/user/changePassword?phone=${passwordForm.phoneNumber}&code=${passwordForm.verificationCode}&password=${passwordForm.newPassword}`,
+      null, // 根据后端接口修改URL
+
+      {
+        headers: {
+          Authorization: `${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      if (response.data.code === 0) {
+        console.log('密码修改成功')
+        // 提交成功后的后续处理，比如清空表单、提示用户成功
+        closePasswordDrawer()
+      } else {
+        console.error('密码修改失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+
   // 在此处处理密码修改逻辑，例如发起 API 请求
-  console.log(`手机号：${passwordForm.phoneNumber} 的密码已成功修改`)
 
   // 清空表单数据
   passwordForm.phoneNumber = ''
@@ -264,7 +347,6 @@ const submitPasswordChange = () => {
   // 关闭 Drawer
   closePasswordDrawer()
 }
-
 
 // 手机号换绑 Drawer 控制
 const phoneDrawerOpen = ref(false)
@@ -281,25 +363,86 @@ const closePhoneDrawer = () => {
 
 // 换绑手机号逻辑
 const sendCode = () => {
-  // 模拟发送验证码
-  console.log(`验证码已发送到 ${phoneForm.newPhone}`)
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/sendSms',
+      new URLSearchParams({
+        phone: phoneForm.newPhone,
+        // 参数名改为 'phone' 符合后端要求
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
+    )
+
+    .then((response) => {
+      console.log('验证码发送结果:', response.data)
+      if (response.data.code === 0) {
+        console.log('验证码发送成功')
+      } else {
+        console.error('验证码发送失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+const sendCode2 = () => {
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/sendSms',
+      new URLSearchParams({
+        phone: passwordForm.phoneNumber, // 参数名改为 'phone' 符合后端要求
+      }).toString(),
+      {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      },
+    )
+
+    .then((response) => {
+      console.log('验证码发送结果:', response.data)
+      if (response.data.code === 0) {
+        console.log('验证码发送成功')
+      } else {
+        console.error('验证码发送失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
 }
 const submitPhoneChange = () => {
-  phoneNumber.value = phoneForm.newPhone
-  closePhoneDrawer()
-}
-
-
-// 提交表单方法
-const onSubmit = () => {
-  // 更新页面数据
-  nickname.value = form.nickname
-  gender.value = form.gender
-  age.value = form.age
-  signature.value = form.signature
-
-  // 关闭 Drawer
-  onClose()
+  console.log('submitPhoneChange 方法被调用')
+  const token = getAccessToken() // 获取令牌
+  console.log('Authorization:', `Bearer ${token}`)
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/communication/changePhone',
+      new URLSearchParams({
+        phone: phoneForm.newPhone,
+        code: phoneForm.verificationCode,
+      }).toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${token}`, // 确保带上正确的授权信息
+        },
+      },
+    )
+    .then((response) => {
+      console.log('换绑手机号结果:', response.data)
+      if (response.data.code === 0) {
+        phoneNumber.value = phoneForm.newPhone
+        localStorage.setItem('token', response.data.accessToken)
+        console.log('手机号换绑成功')
+        closePhoneDrawer()
+      } else {
+        console.error('手机号换绑失败:', response.data.message)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
 }
 </script>
 

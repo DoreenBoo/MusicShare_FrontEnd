@@ -203,6 +203,7 @@ const handleLogin = () => {
           console.log('Login successful:', msg)
           localStorage.setItem('token', response.data.accessToken)
           localStorage.setItem('remark', remark) // 将remark存储到本地存储
+          localStorage.setItem('phoneNumber', phone.value); // 将手机号存储到 localStorage
           // 打印 remark 来确认它的值
           console.log('User remark:', remark)
 

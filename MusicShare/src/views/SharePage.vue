@@ -77,18 +77,6 @@
         />
       </div>
 
-      <!-- 音乐文件上传 -->
-      <div style="margin-bottom: 15px">
-        <label for="musicFile" style="font-size: 16px">上传音乐</label>
-        <input
-          id="musicFile"
-          type="file"
-          accept="audio/*"
-          @change="handleFileChange"
-          style="margin-top: 5px"
-        />
-      </div>
-
       <!-- 图片文件上传 -->
       <div style="margin-bottom: 15px">
         <label for="imageFile" style="font-size: 16px">上传封面</label>
@@ -130,16 +118,6 @@ const musicFile = ref(null)
 const shareLink = ref('')
 const imageFile = ref(null)
 const previewImage = ref(null) // 图片预览地址
-
-// 处理文件上传
-const handleFileChange = (event) => {
-  const file = event.target.files[0]
-  if (file && file.type.startsWith('audio/')) {
-    musicFile.value = file
-  } else {
-    alert('请选择一个有效的音乐文件')
-  }
-}
 
 // 处理图片上传
 const handleImageChange = (event) => {
