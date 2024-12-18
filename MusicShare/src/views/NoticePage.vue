@@ -38,10 +38,6 @@
     </div>
 
     <!-- 消息内容部分 -->
-    <div v-if="activeType === '粉丝'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
-      <h3>粉丝通知：</h3>
-      <p>你有新的粉丝！快来看看是谁关注了你吧。</p>
-    </div>
     <div v-if="activeType === '评论'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
       <h3>评论通知：</h3>
       <p>有人评论了你发布的内容！赶紧去查看吧。</p>
@@ -58,7 +54,7 @@
 import { ref } from 'vue';
 
 // 定义消息类型
-const messageTypes = ['粉丝', '评论', '通知'];
+const messageTypes = ['评论', '通知'];
 
 // 当前选择的消息类型
 const activeType = ref('粉丝');

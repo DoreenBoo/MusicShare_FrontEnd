@@ -1,6 +1,6 @@
 <template>
   <!-- 页面特定内容 -->
-  <a-breadcrumb style="margin: 16px 0">1
+  <a-breadcrumb style="margin: 16px 0">
     <a-breadcrumb-item>MusicShare</a-breadcrumb-item>
   </a-breadcrumb>
 
@@ -42,7 +42,7 @@
         <textarea
           id="description"
           v-model="musicDescription"
-          placeholder="输入音乐文案"
+          placeholder="输入分享心得"
           rows="4"
           style="padding: 10px; width: 100%; border-radius: 40px; margin-top: 5px"
         ></textarea>
