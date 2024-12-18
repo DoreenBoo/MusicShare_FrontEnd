@@ -5,6 +5,7 @@ import '@/assets/text/text.css'
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
 import axios from './utils/axios'; // 导入配置好的 axios 实例
+import { createPinia } from 'pinia'
 
 const app = createApp(App)
 
@@ -17,3 +18,8 @@ app.mount('#app')
 
 // 将 axios 实例挂载到全局属性中
 app.config.globalProperties.$axios = axios;
+
+const pinia = createPinia()
+
+// 挂载 Pinia
+app.use(pinia)

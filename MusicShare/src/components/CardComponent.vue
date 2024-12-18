@@ -12,7 +12,12 @@
         <hr />
         <p>{{ card.description }}</p>
         <p>
-          分享链接：<a :href="card.link" target="_blank">{{ card.link }}</a>
+          <a-button type="primary" shape="round" :size="size" @click="downloadMusic">
+            <template #icon>
+              <DownloadOutlined />
+            </template>
+            Download
+          </a-button>
         </p>
         <div style="
             display: flex;
@@ -63,9 +68,11 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue'
+import axios from 'axios'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
+import { DownloadOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps({
   card: {
@@ -81,15 +88,14 @@ const newComment = ref('')
 const comments = ref([]) // 存储评论列表
 const showComments = ref(false) // 控制评论区域的显示状态
 
+// 获取用户的 access token
+const getAccessToken = () => {
+  return localStorage.getItem('token')  // 从 localStorage 获取 token，确保该 token 是你在用户登录时存储的
+}
+
 const openModal = () => {
   isModalVisible.value = true
 }
-
-// const toggleLike = () => {
-//   const updatedCard = { ...props.card, isLiked: !props.card.isLiked }
-//   emit('updateCard', updatedCard)
-// }
-
 const toggleCollect = () => {
   const updatedCard = { ...props.card, isCollected: !props.card.isCollected }
   emit('updateCard', updatedCard)
@@ -112,10 +118,49 @@ const addComment = () => {
     newComment.value = '' // 清空输入框
   }
 }
+const isDownloading = ref(false) // 用来表示是否正在下载
+
+// 下载音乐文件的方法
+const downloadMusic = () => {
+  isDownloading.value = true // 开始下载，显示加载状态
+  const token = getAccessToken() // 获取登录令牌
+  const downloadUrl = props.card.link // 使用card中的link属性作为下载链接
+
+  axios
+    .get(downloadUrl, {
+      headers: {
+        Authorization: `${token}`,
+      },
+      responseType: 'blob', // 表明响应类型是文件流
+    })
+    .then((response) => {
+      // 获取文件名，可以根据后端响应的内容来获取
+      const contentDisposition = response.headers['content-disposition']
+      const fileName = contentDisposition ? contentDisposition.split('filename=')[1] : 'music_file.mp3'
+
+      // 创建一个下载链接
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', fileName) // 设置下载文件名
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link) // 下载完成后清理
+      window.URL.revokeObjectURL(url)
+    })
+    .catch((error) => {
+      console.error('下载错误:', error)
+      alert('下载过程中发生错误，请稍后再试。')
+    })
+    .finally(() => {
+      isDownloading.value = false // 下载完成或失败后，恢复按钮状态
+    })
+}
+
+
 </script>
 
 <style scoped>
-/* 添加样式 */
 .comment-list {
   margin-top: 20px;
 }

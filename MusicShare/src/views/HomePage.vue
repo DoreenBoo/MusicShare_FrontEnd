@@ -52,32 +52,37 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed ,onMounted} from 'vue'
 import { Carousel } from 'ant-design-vue'
-import useCardStore from '../useCardStore' 
+import { useCardStore } from '../stores/cardStore' 
 import CardComponent from '../components/CardComponent.vue'
 
-const cardStore = useCardStore()  // 使用 useCardStore
+const cardStore = useCardStore()
 
 const categories = ['流行', '摇滚', '嘻哈', '古典', '爵士', '其他']
 const selectedCategory = ref('全部')
 
-// 使用 getCards 方法获取卡片数据
+// 动态计算过滤后的卡片
 const filteredCards = computed(() => {
-  const allCards = cardStore.getCards()  // 确保调用 getCards 方法
-  if (selectedCategory.value === '全部') return allCards
-  return allCards.filter((card) => card.category === selectedCategory.value)
-})
-
-const filterCards = () => {
-  console.log('选中的类别：', selectedCategory.value)
-  console.log('筛选后的卡片：', filteredCards.value)
-}
+  const allCards = cardStore.getCards;
+  return selectedCategory.value === '全部'
+    ? allCards
+    : allCards.filter((card) => card.category === selectedCategory.value);
+});
 
 // 处理卡片更新
 const updateCard = (updatedCard) => {
-  cardStore.updateCard(updatedCard)
-}
+  cardStore.updateCard(updatedCard);
+};
+
+const filterCards = () => {
+  console.log(`筛选分类：${selectedCategory.value}`);
+};
+
+// 在组件挂载时获取卡片数据
+onMounted(() => {
+  cardStore.fetchCards();
+});
 </script>
 
 
