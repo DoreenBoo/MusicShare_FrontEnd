@@ -21,7 +21,7 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       pinia:
-        specifier: ^2.2.6
+        specifier: ^2.3.0
         version: 2.3.0(typescript@5.7.2)(vue@3.5.13(typescript@5.7.2))
       unplugin-vue-components:
         specifier: ^0.27.5

@@ -20,11 +20,20 @@ export default defineConfig({
         }),
       ],
     }),
-    
   ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
+    },
+  },
+  server: {
+    proxy: {
+      // 代理所有请求到 /share-aoo-api 开头的路径
+      '/share-app-api': {
+        target: 'http://localhost:8083', // 目标后端 API 地址
+        changeOrigin: true,  // 修改请求头中的 Origin 字段，使其符合目标地址
+        rewrite: (path) => path.replace(/^\/share-app-api/, ''), // 重写路径，使之符合目标路径
+      },
     },
   },
 })

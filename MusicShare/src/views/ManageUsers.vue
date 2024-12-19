@@ -12,6 +12,10 @@
           placeholder="搜索用户..."
           style="padding: 10px; width: 300px; border-radius: 40px; border: 1px solid #ccc"
         />
+        <!-- 搜索按钮 -->
+        <button @click="searchUsers" style="padding: 10px 20px; border-radius: 40px; background-color: #3498db; color: white; border: none; cursor: pointer;">
+          搜索
+        </button>
       </div>
 
       <!-- 用户列表 -->
@@ -33,7 +37,7 @@
               <td>{{ user.nickname }}</td>
               <td>{{ user.age }}</td>
               <td>{{ user.gender }}</td>
-              <td>{{ user.signature }}</td>
+              <td>{{ user.motto}}</td>
               <td>
                 <button @click="deleteUser(user.id)">删除</button>
               </td>
@@ -55,7 +59,7 @@
           min-height: 500px;
         "
       >
-        <div style=" padding: 10px">
+        <div style="padding: 10px">
           <ul>
             <li v-for="deletedUser in deletedUsers" :key="deletedUser.id">
               {{ deletedUser.nickname }} ({{ deletedUser.phone }})
@@ -68,29 +72,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted,watch } from 'vue'
+import axios from 'axios'
 
 // 示例用户数据
-const users = ref([
-  { id: 1, phone: '13800000001', nickname: '用户1', age: 25, gender: '男', signature: '热爱编程' },
-  {
-    id: 2,
-    phone: '13800000002',
-    nickname: '用户2',
-    age: 30,
-    gender: '女',
-    signature: '生活不止眼前的苟且',
-  },
-  {
-    id: 3,
-    phone: '13800000003',
-    nickname: '用户3',
-    age: 28,
-    gender: '男',
-    signature: '梦想与代码',
-  },
-  { id: 4, phone: '13800000004', nickname: '用户4', age: 22, gender: '女', signature: '随风而行' },
-])
+const users = ref([])
 
 // 历史删除的用户
 const deletedUsers = ref([])
@@ -98,6 +84,49 @@ const deletedUsers = ref([])
 // 搜索查询字符串
 const searchQuery = ref('')
 
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
+
+// 获取所有用户信息
+const getUsers = () => {
+  const token = getAccessToken() // 获取登录令牌
+  axios
+    .post('http://localhost:8083/share-app-api/manager/Users', {},{
+      headers: {
+        Authorization: `${token}`,
+      },
+    }) // 替换为你后端实际的API路径
+    .then((response) => {
+      users.value = response.data.data // 假设返回的数据结构是 { data: [...] }
+    })
+    .catch((error) => {
+      console.error('获取用户数据失败:', error)
+    })
+}
+
+
+// 根据搜索查询发送请求
+const searchUsers = () => {
+  const token = getAccessToken() // 获取登录令牌
+  if (searchQuery.value.trim() === '') {
+    alert('请输入搜索关键词')
+    return
+  }
+  axios
+    .get('http://localhost:8083/share-app-api/manager/SearchUsers', {
+      params: { keyword: searchQuery.value },
+      headers: {
+        Authorization: ` ${token}`,
+      },
+    })
+    .then((response) => {
+      users.value = response.data.data // 假设返回的数据结构是 { data: [...] }
+    })
+    .catch((error) => {
+      console.error('模糊搜索用户失败:', error)
+    })
+}
 // 计算属性：返回过滤后的用户列表
 const filteredUsers = computed(() => {
   if (!searchQuery.value) {
@@ -123,6 +152,12 @@ const deleteUser = (userId) => {
     users.value = users.value.filter((user) => user.id !== userId)
   }
 }
+// 在组件挂载时获取用户数据
+onMounted(() => {
+  getUsers()
+
+})
+
 </script>
 
 <style scoped>

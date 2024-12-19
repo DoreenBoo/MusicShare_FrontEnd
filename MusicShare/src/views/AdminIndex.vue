@@ -20,6 +20,14 @@
       >
         Review Music
       </router-link>
+
+            <!-- 跳转到用户页面 -->
+      <router-link
+        to="/index/home"
+        class="admin-btn"
+      >
+        Home
+      </router-link>
     </div>
 
     <!-- 页面内容 -->

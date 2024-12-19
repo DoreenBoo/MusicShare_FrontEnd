@@ -53,6 +53,7 @@
 import { ref ,watch} from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
 import LogoutConfirm from '../components/LogoutConfirm.vue';
+import axios from 'axios';  // 导入axios
 
 
 const selectedKeys = ref(['1']);
@@ -70,9 +71,38 @@ watch(avatarSrc, (newAvatar) => {
 // 引用 LogoutConfirm 组件
 const logoutConfirm = ref(null);
 
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
 // 处理搜索
 const handleSearch = (value) => {
-  console.log('搜索内容:', value);
+    const token = getAccessToken() // 获取登录令牌
+  if (!value) {
+    console.log('请输入搜索内容');
+    return;
+  }
+  // 调用模糊搜索接口
+  axios.post('http://localhost:8083/share-app-api/user/SearchMusic', {}, {
+    params: { keyword: value },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `${token}`
+    }
+  })
+  .then((response) => {
+    console.log('搜索结果:', response.data);
+    if (response.data.code === 0) {
+      // 更新搜索结果
+      searchResults.value = response.data.data;
+    } else {
+      // 如果没有结果，给出提示
+      searchResults.value = [];
+    }
+  })
+  .catch((error) => {
+    console.error('搜索失败:', error);
+    searchResults.value = [];
+  });
 };
 
 // 菜单点击处理

@@ -26,11 +26,10 @@
 
     <!-- 显示粉丝和关注 -->
     <h3 style="margin-top: 20px; display: flex; gap: 10px">
-      <span @click="showFans" style="cursor: pointer; color: blue">粉丝：{{ fansCount }}</span>
-      <span @click="showFollowing" style="cursor: pointer; color: blue"
-        >关注: {{ followingCount }}</span
-      >
+      <span @click="handleShowFans" style="cursor: pointer; color: blue">粉丝：{{ fansCount }}</span>
+      <span @click="handleShowFollowing" style="cursor: pointer; color: blue">关注: {{ followingCount }}</span>
     </h3>
+
     <!-- 引入粉丝与关注弹窗组件 -->
     <FollowersListModal
       :visible="fansModalVisible"
@@ -44,6 +43,7 @@
       title="关注列表"
       @close="closeFollowing"
     />
+
     <!-- 个人信息部分 -->
     <div
       style="
@@ -109,7 +109,7 @@
         :footer-style="{ textAlign: 'right' }"
         @close="onClose"
       >
-        <a-form :model="form" :rules="rules" layout="vertical">
+        <a-form :model="form" layout="vertical">
           <a-row :gutter="16">
             <a-col :span="12">
               <a-form-item label="Nickname" name="nickname">
@@ -151,6 +151,7 @@
           </a-space>
         </template>
       </a-drawer>
+
       <!-- 更改密码 Drawer -->
       <a-drawer
         title="修改密码"
@@ -216,61 +217,90 @@
 
 <script setup>
 import FollowersListModal from '../components/FollowersListModal.vue'
-import { fans, following } from '../mockData'
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import axios from 'axios'
+import { PlusOutlined } from '@ant-design/icons-vue'
 
 // 页面显示的数据
-const nickname = ref('小帅')
-const phoneNumber = ref('13800000000')
-const gender = ref('女')
-const age = ref(18)
-const signature = ref('保持微笑，走到哪里都能散发光芒。')
+const nickname = ref('')
+const phoneNumber = ref('')
+const gender = ref('')
+const age = ref(0)
+const signature = ref('')
+const avatarSrc = ref(localStorage.getItem('avatarUrl') || ' ') //头像
 
-// 头像
-const avatarSrc =ref(localStorage.getItem('avatarUrl')); // 从本地存储读取头像 URL
-const fileInput = ref(null);
-
-const selectImage = () => {
-  fileInput.value.click() // 触发文件选择对话框
+const getAccessToken = () => {
+  return localStorage.getItem('token')
 }
 
+// 获取用户信息
+const getUserInfo = () => {
+  const token = getAccessToken()
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/info',
+      {},
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      },
+    )
+    .then((response) => {
+      if (response.data.code === 0) {
+        const userInfo = response.data.data
+        avatarSrc.value = userInfo.avatar || ''
+        nickname.value = userInfo.nickname || ''
+        phoneNumber.value = userInfo.phone || ''
+        gender.value = userInfo.gender || '保密'
+        age.value = userInfo.age || 0
+        signature.value = userInfo.motto || ''
+        localStorage.setItem('avatarUrl', avatarSrc.value)
+      } else {
+        console.error('获取用户信息失败:', response.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.error('请求错误:', error)
+    })
+}
+
+onMounted(() => {
+  getUserInfo()
+  fetchFansCount()
+  fetchFollowingCount()
+})
+
+// 上传头像相关逻辑
+const fileInput = ref(null)
+const selectImage = () => {
+  fileInput.value.click()
+}
 const onFileChange = (event) => {
   const file = event.target.files[0]
   const token = getAccessToken()
   if (file) {
-
-    // 预览本地文件（FileReader 生成 blob URL）
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onload = (e) => {
-      avatarSrc.value = e.target.result; // 临时展示本地预览的图片
-    };
+      avatarSrc.value = e.target.result // 本地预览
+    }
+    reader.readAsDataURL(file)
 
-    reader.readAsDataURL(file);
-    //文件上传
     const formData = new FormData()
-    formData.append('file', file) // 将文件附加到FormData对象
+    formData.append('file', file)
 
-
-
-    // 发送头像上传请求
     axios
-      .post(
-        'http://localhost:8083/share-app-api/user/upload/avatar',
-         formData ,
-        {
-          headers: {
-            Authorization: `${token}`,
-            'Content-Type': 'multipart/form-data', // 设置为文件上传格式
-          },
+      .post('http://localhost:8083/share-app-api/user/upload/avatar', formData, {
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'multipart/form-data',
         },
-      )
+      })
       .then((response) => {
         if (response.data.code === 0) {
-          // 成功上传，更新头像
-          avatarSrc.value = response.data.data ;// 假设后端返回的是头像 URL
-           localStorage.setItem('avatarUrl', avatarSrc.value);
-          console.log('头像上传成功:', avatarSrc.value);
+          avatarSrc.value = response.data.data
+          localStorage.setItem('avatarUrl', avatarSrc.value)
+          console.log('头像上传成功:', avatarSrc.value)
         } else {
           console.error('头像上传失败:', response.data.msg)
         }
@@ -280,17 +310,91 @@ const onFileChange = (event) => {
       })
   }
 }
+
+// 粉丝和关注相关逻辑
+const fans = ref([])
+const following = ref([])
+
+// 将后端返回的数据转换为前端需要的格式
+const transformUserData = (data) => {
+  return data.map(user => ({
+    id: user.id,
+    avatar: user.avatar,
+    name: user.nickname,
+    followed: !!user.followed_id,
+    gender: user.gender,
+    motto: user.motto
+  }))
+}
+
+// 获取粉丝列表
+const fetchFans = (page = 0, size = 10) => {
+  const token = getAccessToken()
+  return axios
+    .post(
+      'http://localhost:8083/share-app-api/user/Fan',
+      { page, size },
+      {
+        headers: { Authorization: `${token}` },
+      }
+    )
+    .then((response) => {
+      console.log('粉丝列表响应:', response.data)
+      if (response.data.code === 0) {
+        fans.value = transformUserData(response.data.data)
+      } else {
+        console.error('获取粉丝列表失败:', response.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.error('获取粉丝列表请求错误:', error)
+    })
+}
+
+// 获取关注列表
+const fetchFollowing = (page = 0, size = 10) => {
+  const token = getAccessToken()
+  return axios
+    .post(
+      'http://localhost:8083/share-app-api/user/Followed',
+      { page, size },
+      {
+        headers: { Authorization: `${token}` },
+      }
+    )
+    .then((response) => {
+      console.log('关注列表响应:', response.data)
+      if (response.data.code === 0) {
+        following.value = transformUserData(response.data.data)
+      } else {
+        console.error('获取关注列表失败:', response.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.error('获取关注列表请求错误:', error)
+    })
+}
+
 // 控制粉丝和关注弹窗
 const fansModalVisible = ref(false)
 const followingModalVisible = ref(false)
 
-const showFans = () => {
-  fetchFansCount()
+const handleShowFans = async () => {
+  await fetchFans()
   fansModalVisible.value = true
 }
+
+const handleShowFollowing = async () => {
+  await fetchFollowing()
+  followingModalVisible.value = true
+}
+
 const closeFans = () => {
-  fetchFollowingCount()
   fansModalVisible.value = false
+}
+
+const closeFollowing = () => {
+  followingModalVisible.value = false
 }
 
 // 动态粉丝和关注数
@@ -310,10 +414,8 @@ const fetchFansCount = () => {
       },
     )
     .then((response) => {
-      console.log('粉丝数量:', response.data)
       if (response.data.code === 0) {
-        fansCount.value = response.data.data // 假设后端返回的是粉丝数
-        console.log('粉丝数量获取成功:', fansCount.value)
+        fansCount.value = response.data.data
       } else {
         console.error('粉丝数量获取失败:', response.data.message)
       }
@@ -336,10 +438,8 @@ const fetchFollowingCount = () => {
       },
     )
     .then((response) => {
-      console.log('关注数量:', response.data)
       if (response.data.code === 0) {
-        followingCount.value = response.data.data // 假设后端返回的是关注数
-        console.log('关注数量获取成功:', followingCount.value)
+        followingCount.value = response.data.data
       } else {
         console.error('关注数量获取失败:', response.data.message)
       }
@@ -348,30 +448,23 @@ const fetchFollowingCount = () => {
       console.error('请求错误:', error)
     })
 }
-const showFollowing = () => {
-  followingModalVisible.value = true
-}
-const closeFollowing = () => {
-  followingModalVisible.value = false
-}
 
-// 表单数据
+// 编辑信息相关
 const form = reactive({
   nickname: '',
   age: '',
   gender: '',
   signature: '',
 })
-const passwordForm = reactive({
-  phoneNumber: '',
-  verificationCode: '',
-  newPassword: '',
-  confirmPassword: '',
-})
 
 // Drawer 显示控制
 const open = ref(false)
 const showDrawer = () => {
+  // 打开编辑个人信息抽屉时，可以将当前信息填入form中
+  form.nickname = nickname.value
+  form.gender = gender.value === '男' ? '1' : (gender.value === '女' ? '2' : '')
+  form.age = age.value
+  form.signature = signature.value
   open.value = true
 }
 const onClose = () => {
@@ -380,10 +473,7 @@ const onClose = () => {
 
 // 提交表单方法
 const onSubmit = () => {
-  // 调用后端 API 修改信息
-  console.log('传给后端的性别值:', form.gender)
-
-  const token = getAccessToken() // 获取令牌
+  const token = getAccessToken()
   axios
     .post(
       'http://localhost:8083/share-app-api/user/update',
@@ -395,7 +485,7 @@ const onSubmit = () => {
       },
       {
         headers: {
-          Authorization: `${token}`, // 确保带上正确的授权信息
+          Authorization: `${token}`,
         },
       },
     )
@@ -403,7 +493,7 @@ const onSubmit = () => {
       if (response.data.code === 0) {
         console.log('个人信息修改成功')
         nickname.value = form.nickname
-        gender.value = form.gender
+        gender.value = form.gender === '1' ? '男' : (form.gender === '2' ? '女' : '保密')
         age.value = form.age
         signature.value = form.signature
         onClose()
@@ -416,17 +506,17 @@ const onSubmit = () => {
     })
 }
 
-// 关闭 Drawer
-
-const getAccessToken = () => {
-  return localStorage.getItem('token')
-}
-// 密码更改 Drawer 显示控制
+// 密码更改相关
 const passwordDrawerOpen = ref(false)
+const passwordForm = reactive({
+  phoneNumber: '',
+  verificationCode: '',
+  newPassword: '',
+  confirmPassword: '',
+})
 const showPasswordDrawer = () => {
   passwordDrawerOpen.value = true
 }
-
 const closePasswordDrawer = () => {
   passwordDrawerOpen.value = false
 }
@@ -438,22 +528,19 @@ const submitPasswordChange = () => {
   }
 
   const token = getAccessToken()
-  console.log('Token:', token)
   axios
     .post(
       `http://localhost:8083/share-app-api/user/changePassword?phone=${passwordForm.phoneNumber}&code=${passwordForm.verificationCode}&password=${passwordForm.newPassword}`,
-      null, // 根据后端接口修改URL
-
+      null,
       {
         headers: {
-          Authorization: `${token}`, // 确保带上正确的授权信息
+          Authorization: `${token}`,
         },
       },
     )
     .then((response) => {
       if (response.data.code === 0) {
         console.log('密码修改成功')
-        // 提交成功后的后续处理，比如清空表单、提示用户成功
         closePasswordDrawer()
       } else {
         console.error('密码修改失败:', response.data.message)
@@ -463,19 +550,13 @@ const submitPasswordChange = () => {
       console.error('请求错误:', error)
     })
 
-  // 在此处处理密码修改逻辑，例如发起 API 请求
-
-  // 清空表单数据
   passwordForm.phoneNumber = ''
   passwordForm.verificationCode = ''
   passwordForm.newPassword = ''
   passwordForm.confirmPassword = ''
-
-  // 关闭 Drawer
-  closePasswordDrawer()
 }
 
-// 手机号换绑 Drawer 控制
+// 换绑手机号相关
 const phoneDrawerOpen = ref(false)
 const phoneForm = reactive({
   newPhone: '',
@@ -488,22 +569,18 @@ const closePhoneDrawer = () => {
   phoneDrawerOpen.value = false
 }
 
-// 换绑手机号逻辑
 const sendCode = () => {
   axios
     .post(
       'http://localhost:8083/share-app-api/communication/sendSms',
       new URLSearchParams({
         phone: phoneForm.newPhone,
-        // 参数名改为 'phone' 符合后端要求
       }).toString(),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       },
     )
-
     .then((response) => {
-      console.log('验证码发送结果:', response.data)
       if (response.data.code === 0) {
         console.log('验证码发送成功')
       } else {
@@ -514,20 +591,19 @@ const sendCode = () => {
       console.error('请求错误:', error)
     })
 }
+
 const sendCode2 = () => {
   axios
     .post(
       'http://localhost:8083/share-app-api/communication/sendSms',
       new URLSearchParams({
-        phone: passwordForm.phoneNumber, // 参数名改为 'phone' 符合后端要求
+        phone: passwordForm.phoneNumber,
       }).toString(),
       {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       },
     )
-
     .then((response) => {
-      console.log('验证码发送结果:', response.data)
       if (response.data.code === 0) {
         console.log('验证码发送成功')
       } else {
@@ -538,10 +614,9 @@ const sendCode2 = () => {
       console.error('请求错误:', error)
     })
 }
+
 const submitPhoneChange = () => {
-  console.log('submitPhoneChange 方法被调用')
-  const token = getAccessToken() // 获取令牌
-  console.log('Authorization:', `Bearer ${token}`)
+  const token = getAccessToken()
   axios
     .post(
       'http://localhost:8083/share-app-api/communication/changePhone',
@@ -552,12 +627,11 @@ const submitPhoneChange = () => {
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${token}`, // 确保带上正确的授权信息
+          Authorization: `${token}`,
         },
       },
     )
     .then((response) => {
-      console.log('换绑手机号结果:', response.data)
       if (response.data.code === 0) {
         phoneNumber.value = phoneForm.newPhone
         localStorage.setItem('token', response.data.accessToken)

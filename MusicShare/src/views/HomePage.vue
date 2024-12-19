@@ -17,12 +17,17 @@
       </div>
     </a-breadcrumb>
 
+    <!-- 走马灯显示 -->
     <div>
       <Carousel autoplay>
-        <div><h3>1</h3></div>
-        <div><h3>2</h3></div>
-        <div><h3>3</h3></div>
-        <div><h3>4</h3></div>
+        <!-- 渲染每首歌的封面 -->
+        <div v-for="song in popularSongs" :key="song.id">
+          <img
+            :src="song.cover" 
+            alt="热门歌曲封面"
+            style="width: 100%; height: 200px; object-fit: cover"
+          />
+        </div>
       </Carousel>
 
       <div
@@ -52,37 +57,83 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { Carousel } from 'ant-design-vue'
-import useCardStore from '../useCardStore' 
+import useCardStore from '../stores/cardStore' 
 import CardComponent from '../components/CardComponent.vue'
+import axios from 'axios'
 
 const cardStore = useCardStore()  // 使用 useCardStore
 
 const categories = ['流行', '摇滚', '嘻哈', '古典', '爵士', '其他']
 const selectedCategory = ref('全部')
 
-// 使用 getCards 方法获取卡片数据
-const filteredCards = computed(() => {
-  const allCards = cardStore.getCards()  // 确保调用 getCards 方法
-  if (selectedCategory.value === '全部') return allCards
-  return allCards.filter((card) => card.category === selectedCategory.value)
+const popularSongs = ref([])  // 存储热门歌曲列表
+
+// 获取登录令牌
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
+
+// 获取热门歌曲数据
+
+
+// 获取热门歌曲数据
+const fetchPopularSongs = () => {
+  const token = getAccessToken()  // 获取登录令牌
+  axios.post(
+    'http://localhost:8083/share-app-api/user/GetHostMusic', 
+    {},
+    {
+      params: {
+        number: 4  // 确保 number 参数在 URL 查询字符串中
+      },
+    
+      headers: {
+        'Content-Type': 'application/json',  // 确保数据以 JSON 格式发送
+        'Authorization': `${token}`,  // 使用 Bearer token 格式
+      },
+    }
+  )
+  .then((response) => {
+    // 处理返回的歌曲数据
+    if (response.data && response.data.data) {
+      popularSongs.value = response.data.data
+    }
+  })
+  .catch((error) => {
+    console.error('获取热门歌曲失败:', error)
+  })
+}
+
+// 在组件加载时获取热门歌曲
+onMounted(() => {
+  fetchPopularSongs()
 })
 
+
+// 动态计算过滤后的卡片
+const filteredCards = computed(() => {
+  const allCards = cardStore.getCards;
+  return selectedCategory.value === '全部'
+    ? allCards
+    : allCards.filter((card) => card.category === selectedCategory.value);
+});
+
 const filterCards = () => {
-  console.log('选中的类别：', selectedCategory.value)
-  console.log('筛选后的卡片：', filteredCards.value)
-}
+  console.log(`筛选分类：${selectedCategory.value}`);
+};
 
 // 处理卡片更新
 const updateCard = (updatedCard) => {
   cardStore.updateCard(updatedCard)
 }
+
+// 在组件挂载时获取卡片数据
+onMounted(() => {
+  cardStore.fetchCards();
+});
 </script>
-
-
-
-
 
 <style scoped>
 select {
@@ -96,7 +147,7 @@ select:focus {
 
 :deep(.slick-slide) {
   text-align: center;
-  height: 160px;
+  height: 200px;
   line-height: 160px;
   background: #364d79;
   overflow: hidden;

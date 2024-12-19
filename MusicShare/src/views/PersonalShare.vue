@@ -26,41 +26,64 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
 import CardComponent from '../components/CardComponent.vue'; // 确保路径正确
+import axios from 'axios';
 
-// 模拟从数据源获取用户分享的音乐卡片数据
-const sharedCards = ref([
-    {
-        title: '浪漫单曲',
-        description: '一首浪漫的单曲分享给大家。',
-        image: '../src/assets/images/注意看，这是小帅.jpg',
-        nickname: '杜雨竹',
-        isLiked: true,
-        isCollected: false,
-    },
-    {
-        title: '爵士乐精选',
-        description: '一张爵士乐精选合集。',
-        image: '../src/assets/images/注意看，这是小帅.jpg',
-        nickname: '杜雨竹',
-        isLiked: true,
-        isCollected: false,
-    },
-    {
-        title: '流行金曲',
-        description: '推荐这张流行金曲专辑！',
-        image: '../src/assets/images/注意看，这是小帅.jpg',
-        nickname: '杜雨竹',
-        isLiked: true,
-        isCollected: false,
-    },
-]);
+// 存储分享的卡片数据
+const sharedCards = ref([]);
+
+// 获取登录令牌
+const getAccessToken = () => {
+  return localStorage.getItem('token');
+}
+
+// 发送请求获取用户分享的音乐作品
+const fetchSharedMusic = () => {
+  const token = getAccessToken();
+
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/GetMyWorks', // 替换为你的分享音乐接口路径
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+    .then((response) => {
+      if (response.data.code === 0 && Array.isArray(response.data.data)) {
+        // 将后端返回的数据映射到卡片数据格式
+        sharedCards.value = response.data.data.map((item) => ({
+          id: item.music_id, // 假设后端返回的数据中有 music_id
+          title: item.song_name || '未知标题',
+          description: item.description || '暂无描述',
+          cover: item.cover || '默认图片路径',
+          isLiked: false,
+          isCollected: false,
+          link: item.link || '', // 下载链接
+        }));
+        console.log('分享的音乐数据加载成功:', sharedCards.value);
+      } else {
+        console.error('获取分享音乐数据失败:', response.data.msg);
+      }
+    })
+    .catch((error) => {
+      console.error('请求分享音乐数据失败:', error);
+    });
+};
 
 // 删除用户分享的音乐
 const removeSharedCard = (cardToRemove) => {
-    sharedCards.value = sharedCards.value.filter(card => card.title !== cardToRemove.title);
+  sharedCards.value = sharedCards.value.filter(card => card.id !== cardToRemove.id);
 };
+
+// 页面加载时获取分享的音乐数据
+onMounted(() => {
+  fetchSharedMusic();
+});
+
 </script>
 
 <style scoped>

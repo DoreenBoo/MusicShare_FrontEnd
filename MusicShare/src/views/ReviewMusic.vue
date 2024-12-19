@@ -12,6 +12,10 @@
           placeholder="搜索音乐标题、描述或类型"
           style="padding: 10px; width: 100%; border-radius: 40px; border: 1px solid #ccc"
         />
+        <!-- 搜索按钮 -->
+        <button @click="searchMusic" style="padding: 10px 20px; border-radius: 40px; background-color: #3498db; color: white; border: none; cursor: pointer;">
+          搜索
+        </button>
       </div>
 
       <!-- 音乐列表 -->
@@ -27,9 +31,9 @@
           </thead>
           <tbody>
             <tr v-for="music in filteredMusicList" :key="music.id">
-              <td>{{ music.title }}</td>
+              <td>{{ music.song_name }}</td>
               <td>{{ music.description }}</td>
-              <td>{{ music.type }}</td>
+              <td>{{ music.keywords }}</td>
               <td>
                 <button @click="approveMusic(music.id)">通过</button>
                 <button @click="rejectMusic(music.id)">拒绝</button>
@@ -53,7 +57,7 @@
           "
         >
           <ul>
-            <li v-for="music in approvedMusic" :key="music.id">{{ music.title }}</li>
+            <li v-for="music in approvedMusic" :key="music.id">{{ music.song_name }}</li>
           </ul>
         </div>
       </div>
@@ -69,7 +73,7 @@
           "
         >
           <ul>
-            <li v-for="music in rejectedMusic" :key="music.id">{{ music.title }}</li>
+            <li v-for="music in rejectedMusic" :key="music.id">{{ music.song_name }}</li>
           </ul>
         </div>
       </div>
@@ -78,15 +82,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed,onMounted } from 'vue'
+import axios from 'axios'
 
 // 示例音乐数据
-const musicList = ref([
-  { id: 1, title: '音乐1', description: '描述1', type: '流行' },
-  { id: 2, title: '音乐2', description: '描述2', type: '摇滚' },
-  { id: 3, title: '音乐3', description: '描述3', type: '嘻哈' },
-  { id: 4, title: '音乐4', description: '描述4', type: '古典' },
-])
+const musicList = ref([])
 
 // 搜索条件
 const searchQuery = ref('')
@@ -95,24 +95,121 @@ const searchQuery = ref('')
 const approvedMusic = ref([])
 const rejectedMusic = ref([])
 
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
+const searchMusic=()=>{
+  const token = getAccessToken() // 获取登录令牌
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/manager/SearchMusic', // 假设你的接口是这个地址
+      new URLSearchParams({ keyword: searchQuery.value }), // 发送关键词
+      {
+        headers: {
+          Authorization: `${token}`, // 添加 Bearer token
+        },
+      }
+    )
+    .then((response) => {
+      if (response.data && response.data.data) {
+        musicList.value = response.data.data || [] // 假设返回的结构为 { data: [...] }
+      } else {
+        alert('没有找到相关音乐')
+      }
+    })
+    .catch((error) => {
+      console.error('搜索音乐失败:', error)
+    })
+}
+
+// 获取待审核的音乐
+const fetchMusicNeedAudit = () => {
+  const token = getAccessToken() // 获取登录令牌
+  axios
+    .post('http://localhost:8083/share-app-api/manager/GetMusicNeedAudit', {},{
+      headers: {
+        Authorization: `${token}`,
+      },
+    }
+
+    )
+    .then((response) => {
+      if (response.data && response.data.data) {
+        musicList.value = response.data.data || [] // 假设返回的结构为 { data: [...] }
+      } else {
+        alert('获取待审核音乐失败')
+      }
+    })
+    .catch((error) => {
+      console.error('获取待审核音乐失败:', error)
+    })
+}
+
 // 审核通过函数
 const approveMusic = (musicId) => {
-  const music = musicList.value.find((music) => music.id === musicId)
-  if (music) {
-    approvedMusic.value.push(music) // 添加到通过的音乐列表
-    musicList.value = musicList.value.filter((music) => music.id !== musicId) // 从待审核列表中移除
+  if (!musicId) {
+    alert('无效的音乐 ID');
+    return;
   }
-  alert(`音乐 ID ${musicId} 审核通过`)
+
+  const token = getAccessToken() // 获取登录令牌
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/manager/UpdateMusic',
+      new URLSearchParams({  music_id: musicId, status: '上线中' }),
+       {
+        headers: {
+          Authorization: `${token}`, // 添加 Bearer token
+      
+        },
+      }
+    )
+    .then((response) => {
+      if (response.data) {
+        const music = musicList.value.find((music) => music.id === musicId)
+        if (music) {
+          approvedMusic.value.push(music) // 添加到通过的音乐列表
+          musicList.value = musicList.value.filter((music) => music.id !== musicId) // 从待审核列表中移除
+        }
+        alert(`音乐 ID ${musicId} 审核通过`)
+      } else {
+        alert('更新音乐状态失败')
+      }
+    })
+    .catch((error) => {
+      console.error('审核通过失败:', error)
+    })
 }
 
 // 审核拒绝函数
 const rejectMusic = (musicId) => {
-  const music = musicList.value.find((music) => music.id === musicId)
-  if (music) {
-    rejectedMusic.value.push(music) // 添加到拒绝的音乐列表
-    musicList.value = musicList.value.filter((music) => music.id !== musicId) // 从待审核列表中移除
-  }
-  alert(`音乐 ID ${musicId} 审核拒绝`)
+  const token = getAccessToken() // 获取登录令牌
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/manager/DeleteMusic',
+      new URLSearchParams({  id: musicId }),
+      {
+        headers: {
+          Authorization: `${token}`, // 添加 Bearer token
+      
+        },
+      }
+    )
+    .then((response) => {
+      if (response.data) {
+        const music = musicList.value.find((music) => music.id === musicId)
+        if (music) {
+          rejectedMusic.value.push(music) // 添加到拒绝的音乐列表
+          musicList.value = musicList.value.filter((music) => music.id !== musicId) // 从待审核列表中移除
+        }
+        alert(`音乐 ID ${musicId} 审核拒绝`)
+      } else {
+        alert('更新音乐状态失败')
+      }
+    })
+    .catch((error) => {
+      console.error('审核拒绝失败:', error)
+    })
 }
 
 // 计算属性：过滤后的音乐列表
@@ -120,11 +217,16 @@ const filteredMusicList = computed(() => {
   const query = searchQuery.value.toLowerCase()
   return musicList.value.filter((music) => {
     return (
-      music.title.toLowerCase().includes(query) ||
+      music.song_name.toLowerCase().includes(query) ||
       music.description.toLowerCase().includes(query) ||
-      music.type.toLowerCase().includes(query)
+      music.keywords.toLowerCase().includes(query)
     )
   })
+})
+
+// 页面加载时获取待审核音乐
+onMounted(() => {
+  fetchMusicNeedAudit()
 })
 </script>
 

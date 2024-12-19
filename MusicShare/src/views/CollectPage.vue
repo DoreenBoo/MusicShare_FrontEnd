@@ -30,51 +30,70 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref ,onMounted} from 'vue'
+import axios from 'axios';
 import CardComponent from '../components/CardComponent.vue'  // 确保路径正确
 
 // 模拟从数据源获取用户收藏的音乐卡片数据
-const collectedCards = ref([
-  {
-    title: '流行专辑',
-    description: '这是一张流行音乐专辑。',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-    nickname: '用户A',
-    isLiked: false,
-    isCollected: true,
-  },
-  {
-    title: '摇滚专辑',
-    description: '摇滚不死！！！',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-    nickname: '用户B',
-    isLiked: false,
-    isCollected: true,
-  },
-  {
-    title: '古典专辑',
-    description: '这是一张古典音乐专辑。',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-    nickname: '用户C',
-    isLiked: false,
-    isCollected: true,
-  },
-  {
-    title: '其他专辑',
-    description: '这是一张其他类型音乐专辑。',
-    image: '../src/assets/images/注意看，这是小帅.jpg',
-    nickname: '用户D',
-    isLiked: false,
-    isCollected: true,
-  },
-]);
+const collectedCards = ref([])
 
+// 获取登录令牌
+const getAccessToken = () => {
+  return localStorage.getItem('token')
+}
+// 发送请求获取收藏的音乐卡片数据
+const fetchCollectedCards = () => {
+  const token = getAccessToken()
+
+  axios
+    .post(
+      'http://localhost:8083/share-app-api/user/Favorites', // 替换为你的收藏接口路径
+      {},
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    )
+    .then((response) => {
+      if (response.data.code === 0 && Array.isArray(response.data.data)) {
+        // 将后端返回的数据映射到卡片数据格式
+        collectedCards.value = response.data.data.map((item) => ({
+          id: item.music_id, // 假设后端返回的数据中有 music_id
+          title: item.song_name || '未知标题',
+          description: item.description || '暂无描述',
+          cover: item.cover || '默认图片路径',
+          nickname: item.author_name || '未知用户',
+          isLiked: false,
+          isCollected: true,
+          link: item.link || '', // 下载链接
+        }))
+        console.log('收藏数据加载成功:', collectedCards.value)
+      } else {
+        console.error('获取收藏数据失败:', response.data.msg)
+      }
+    })
+    .catch((error) => {
+      console.error('请求收藏数据失败:', error)
+    })
+}
+// 更新卡片的状态
 const updateCard = (updatedCard) => {
-  const index = collectedCards.value.findIndex(card => card.title === updatedCard.title);
-  if (index !== -1) {
-    collectedCards.value[index] = updatedCard; // 更新卡片数据
+  if (!updatedCard.isCollected) {
+    // 如果卡片被取消收藏，则从列表中移除
+    collectedCards.value = collectedCards.value.filter(card => card.id !== updatedCard.id)
+  } else {
+    // 如果卡片仍然被收藏，则更新卡片数据
+    const index = collectedCards.value.findIndex(card => card.id === updatedCard.id)
+    if (index !== -1) {
+      collectedCards.value[index] = updatedCard;
+    }
   }
 }
+// 页面加载时获取收藏数据
+onMounted(() => {
+  fetchCollectedCards()
+})
 </script>
 
 <style scoped>

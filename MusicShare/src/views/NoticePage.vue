@@ -44,8 +44,10 @@
     </div>
 
     <div v-if="activeType === '通知'" style="width: 100%; padding: 20px; background-color: rgb(200, 200, 169); border-radius: 10px;">
-      <h3>系统通知：</h3>
-      <p>系统公告：我们即将进行一次版本更新，敬请期待！</p>
+       <h3>系统通知：</h3>
+      <div v-for="(notification, index) in notifications" :key="notification.id">
+        <p><strong>通知内容：</strong> {{ notification.content }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -109,7 +111,8 @@ const fetchNotifications = () => {
       },
   ) 
     .then((response) => {
-      notifications.value = response.data; // 假设后端返回的数据是通知列表
+      console.log('获取的通知数据:', response.data); // 打印返回的数据
+       notifications.value = response.data.data; // 修改为从 data 中提取通知数组
     })
     .catch((error) => {
       console.error('获取通知数据失败:', error);
