@@ -23,7 +23,7 @@
 </template>
 
 <script setup>
-import useCardStore from '../useCardStore'  // 确保路径正确
+import { useCardStore } from '@/stores/useCardStore'
 import CardComponent from '../components/CardComponent.vue'  // 确保路径正确
 
 const cardStore = useCardStore()
@@ -39,5 +39,5 @@ const updateCard = (updatedCard) => {
 </script>
 
 <style lang="scss" scoped>
-/* 添加样式（如有需要） */
+
 </style>

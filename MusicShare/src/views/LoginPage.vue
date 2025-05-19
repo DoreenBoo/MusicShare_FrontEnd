@@ -9,7 +9,7 @@
           class="login-method-btn"
           :class="{ active: loginMethod === 'password' }"
           :style="{
-            backgroundColor: loginMethod === 'password' ? 'rgb(254, 67, 101)' : 'rgb(252,157,154)',
+  backgroundColor: loginMethod === 'password' ? '#FF5B60' : 'rgb(252,157,154)',
           }"
           @click="loginMethod = 'password'"
         >
@@ -19,7 +19,7 @@
           class="login-method-btn"
           :class="{ active: loginMethod === 'phone' }"
           :style="{
-            backgroundColor: loginMethod === 'phone' ? 'rgb(254, 67, 101)' : 'rgb(252,157,154)',
+  backgroundColor: loginMethod === 'phone' ? '#FF5B60' : 'rgb(252,157,154)',
           }"
           @click="loginMethod = 'phone'"
         >
@@ -229,8 +229,8 @@ const handleLogin = () => {
 
 <style>
 .login-wrapper {
-  background-color: rgb(249, 205, 173);
-  width: 358px;
+  background-color:#F6DEB8;
+  width: 600px;
   height: 650px;
   border-radius: 40px;
   padding: 0 50px;
@@ -241,16 +241,18 @@ const handleLogin = () => {
   font-weight: bold;
   text-align: center;
   line-height: 200px;
+  color: #443E46;
 }
 
 .input-item {
   display: block;
+  height: 50px;
   width: 100%;
   margin-bottom: 20px;
   border: 0;
   padding: 10px;
   border-bottom: 1px solid rgb(128, 125, 125);
-  font-size: 15px;
+  font-size: 20px;
   outline: none;
   border-radius: 40px;
 }
@@ -261,14 +263,14 @@ const handleLogin = () => {
 }
 
 .code-btn {
-  background-color: rgb(254, 67, 101);
+  background-color:#FF5B60;
   color: #fff;
   border: none;
-  border-radius: 20px;
+  border-radius: 40px;
   margin-left: 10px;
-  padding: 5px 15px;
+  padding: 5px 20px;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 20px;
 }
 
 .code-btn:disabled {
@@ -285,12 +287,13 @@ const handleLogin = () => {
 
 .login-method-btn {
   padding: 10px 30px;
-  background-color: rgb(254, 67, 101);
+  height: 50px;
+  background-color: #FF5B60;
   color: white;
   border: none;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
   width: 48%;
   transition: background-color 0.3s;
 }
@@ -302,11 +305,13 @@ const handleLogin = () => {
 .btn {
   text-align: center;
   padding: 10px;
+  height: 50px;
   width: 100%;
   margin-top: 40px;
-  background-color: rgb(254, 67, 101);
-  border-color: rgb(254, 67, 101);
+  background-color:#FF5B60;
+  border-color: #FF5B60;
   color: #fff;
+  font-size: 20px;
   border-radius: 40px;
 }
 

@@ -17,7 +17,6 @@ defineProps({
 
 
 <style scoped>
-/* 确保容器的高度为100vh，覆盖整个视口 */
 .container {
   display: flex;
   flex-direction: column;
@@ -28,7 +27,7 @@ defineProps({
 }
 
 h1 {
-  color: rgb(254, 67, 101);
+  color: #FF5B60;
   font-size: 100px;
   font-family: 'melete';
   font-weight: 300; /* 字体粗细 */
@@ -36,8 +35,8 @@ h1 {
 }
 
 .custom-button {
-  background-color: rgb(249, 205, 173); /* 默认背景颜色 */
-  color: white;
+  background-color: #F6DEB8; /* 默认背景颜色 */
+  color: #443E46;
   border-color: rgb(255, 255, 255); /* 默认边框颜色 */
   transition: background-color 0.3s, border-color 0.3s; /* 添加平滑过渡效果 */
   font-size: 60px;
@@ -48,7 +47,7 @@ h1 {
 
 /* 鼠标悬停时的背景颜色 */
 .custom-button:hover {
-  background-color: rgb(254, 67, 101);
+  background-color: #FF5B60;
   border-color: rgb(254, 67, 101); /* 悬停时改变边框颜色 */
 }
 </style>

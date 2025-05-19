@@ -23,8 +23,8 @@
 body {
   background-image: url("./assets/images/icon.png"); /* 替换为图片路径 */
   background-size: 400px;
-  background-repeat: no-repeat; /* 不重复 */
-  background-color: rgb(252, 157, 154); /* 替换成你想要的颜色 */
+  background-repeat: no-repeat; 
+  background-color: #57659E; 
    margin: 0; /* 去除默认边距 */
 }
 

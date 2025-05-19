@@ -54,7 +54,7 @@
 <script setup>
 import { ref, computed ,onMounted} from 'vue'
 import { Carousel } from 'ant-design-vue'
-import { useCardStore } from '../stores/cardStore' 
+import { useCardStore } from '../stores/useCardStore' 
 import CardComponent from '../components/CardComponent.vue'
 
 const cardStore = useCardStore()
